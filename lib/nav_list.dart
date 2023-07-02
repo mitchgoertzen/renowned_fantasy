@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 
 import 'features/leagues/screens/league.dart';
 import 'features/leagues/screens/team.dart';
-import 'features/player_management/models/Player.dart';
 import 'features/player_management/screens/player_add.dart';
 import 'main.dart';
 

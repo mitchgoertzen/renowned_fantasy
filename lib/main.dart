@@ -1,8 +1,7 @@
-import 'package:fantasy_draft/features/leagues/screens/watchlist.dart';
 import 'package:fantasy_draft/features/player_management/models/Player.dart';
 import 'package:fantasy_draft/theme/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import "package:provider/provider.dart";
 
 import 'features/main/screens/home.dart';
 

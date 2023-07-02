@@ -13,7 +13,7 @@ class PlayerAdd extends StatelessWidget {
             Expanded(
               child: Row(children: [
                 Container(color: Colors.red, child: Text('ansd')),
-                DragItem()
+                DragItem(name: '1')
               ]),
             ),
             Container(color: Colors.green, child: DraggableItemTarget())

@@ -8,38 +8,50 @@ class DraggableItemTarget extends StatefulWidget {
 }
 
 class _DraggableItemTargetState extends State<DraggableItemTarget> {
-  int acceptedData = 0;
+  String acceptedData = '';
   String label = 'waiting...';
   double h = 100.0;
   double w = 100.0;
+  String name = '2';
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        DragTarget<int>(
+    return Center(
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            flex: 2,
+            child:       
+              DragTarget<String>(
           builder: (
             BuildContext context,
             List<dynamic> accepted,
             List<dynamic> rejected,
           ) {
-            return Container(
-              height: h,
-              width: w,
-              color: Colors.cyan,
-              child: DragItem(),
-            );
+            return 
+                        Container(
+              color: Colors.amber,
+              height: 100,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(label),
+                  DragItem(name: name),
+                ],
+              ),
+            )
+            
+            ;
           },
-          onAccept: (int data) {
+          onAccept: (String data) {
             setState(() {
-              acceptedData += data;
-
+              acceptedData = data;
+name = data;
               label = 'waiting';
             });
           },
           onWillAccept: (data) {
-            if (data! > 0) {
+            if (data != null) {
               print('will accept');
               setState(() {
                 label = 'will accept';
@@ -55,14 +67,24 @@ class _DraggableItemTargetState extends State<DraggableItemTarget> {
               label = 'waiting';
             });
           },
-        ),
-      ],
-    );
+        ),)
+            
+          //   Container(
+          //     color: Colors.amber,
+          //     height: 100,
+          //   ),
+          // )
+          
+          ]));
+
   }
 }
 
 class DragItem extends StatefulWidget {
-  const DragItem({super.key});
+  const DragItem({super.key, required this.name});
+
+
+  final String name;
 
   @override
   State<DragItem> createState() => _DragItemState();
@@ -73,14 +95,16 @@ class _DragItemState extends State<DragItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
       Draggable(
         onDragStarted: () {
           setState(() {
             isDragged = true;
           });
         },
-        data: 10,
+        data: widget.name,
         //item while being dragged
         feedback: Container(
           color: Colors.deepOrange,
@@ -102,8 +126,8 @@ class _DragItemState extends State<DragItem> {
           height: 100.0,
           width: 100.0,
           color: Colors.lightGreenAccent,
-          child: const Center(
-            child: Text('Draggable'),
+          child: Center(
+            child: Text('Draggable ${widget.name}'),
           ),
         ),
       ),
