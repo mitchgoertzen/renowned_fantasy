@@ -1,7 +1,6 @@
 import 'dart:collection';
 
 import 'package:fantasy_draft/features/player_management/models/player.dart';
-import 'package:fantasy_draft/global_components/app_scaffold.dart';
 import 'package:fantasy_draft/global_components/player_listing_component.dart';
 import 'package:fantasy_draft/global_components/roster.dart';
 import 'package:fantasy_draft/global_components/section_container.dart';
@@ -105,9 +104,7 @@ class _TeamState extends State<Team> {
 
   @override
   Widget build(BuildContext context) {
-    return appScaffold(
-        context,
-        ListView(
+    return ListView(
           children: [
             Center(child: sectionContainer(myRoster)),
             Center(
@@ -119,7 +116,6 @@ class _TeamState extends State<Team> {
                 )
               ],))),
           ],
-        ),
-        widget);
+        );
   }
 }

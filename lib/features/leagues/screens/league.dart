@@ -1,4 +1,3 @@
-import 'package:fantasy_draft/global_components/app_scaffold.dart';
 import 'package:fantasy_draft/global_components/expandable_list_item.dart';
 import 'package:flutter/material.dart';
 
@@ -7,9 +6,7 @@ class League extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return appScaffold(
-        context,
-        ListView(
+    return ListView(
           children: [
             ExpandableListItem(
                 title: Row(
@@ -27,7 +24,6 @@ class League extends StatelessWidget {
                 ),
                 body: Text('matchup results'))
           ],
-        ),
-        this);
+        );
   }
 }

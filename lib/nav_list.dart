@@ -34,7 +34,8 @@ class NavList extends StatelessWidget {
               navButton(context, Placeholder(), 'Stats'),
               navButton(context, Watchlist(), 'Watchlist'),
             ]),
-            this);
+            this,
+            null);
   }
 }
 

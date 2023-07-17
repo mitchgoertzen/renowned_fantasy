@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:fantasy_draft/global_components/app_scaffold.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/team.dart';
@@ -12,23 +13,29 @@ class LeagueNavigator extends StatefulWidget {
   State<LeagueNavigator> createState() => _LeagueNavigatorState();
 }
 
-class _LeagueNavigatorState extends State<LeagueNavigator> {
+class _LeagueNavigatorState extends State<LeagueNavigator>
+    with SingleTickerProviderStateMixin {
+
   int _selectedIndex = 0;
-
-  bool canback = false;
-
-  Widget page = Team();
-
+  
   List<int> tabStack = [0];
 
-  // static const List<Widget> _widgetOptions = <Widget>[
-  //   Team(),
-  //   Matchup(),
-  //   League(),
-  //   Placeholder()
-  // ];
+  late TabController _tabController;
 
-  void selectPage(int index) {
+  @override
+  void initState() {
+    _tabController = TabController(length: 4, vsync: this);
+    super.initState();
+  }
+
+  static const List<Widget> _widgetOptions = <Widget>[
+    Team(),
+    Matchup(),
+    League(),
+    Placeholder()
+  ];
+
+  void _selectPage(int index) {
     _selectedIndex = index;
 
     print('select page');
@@ -46,79 +53,56 @@ class _LeagueNavigatorState extends State<LeagueNavigator> {
       tabStack.add(_selectedIndex);
     }
 
-    setState(() {
-      switch (index) {
-        case 0:
-          page = Team();
-          break;
-        case 1:
-          page = Matchup();
-          break;
-        case 2:
-          page = League();
-          break;
-        case 3:
-          page = Placeholder();
-          break;
-      }
-    });
+    _tabController.animateTo(index);
   }
 
-  void _onItemTapped(int index) {
-    selectPage(index);
-    //  Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+  _bottomTabBar(ThemeData theme) {
+    return FractionallySizedBox(
+      alignment: Alignment.bottomCenter,
+      heightFactor: 0.09,
+      child: TabBar(
+        labelColor: theme.primaryColor,
+        unselectedLabelColor: theme.disabledColor,
+        indicatorColor: Colors.transparent,
+        onTap: _selectPage,
+        tabs: [
+          _tabItem(Icons.people_alt_sharp, 'My Team', 0),
+          _tabItem(Icons.compare_arrows_sharp, 'Matchup', 1),
+          _tabItem(Icons.format_list_numbered_rounded, 'League', 2),
+          _tabItem(Icons.sports_baseball_sharp, 'MLB', 3),
+        ],
+        controller: _tabController,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
+    
+    ThemeData theme = Theme.of(context);
 
     return WillPopScope(
-      onWillPop: _onWillPop,
-      child: Scaffold(
-          body: Center(
-            child: page,
-          ),
-          bottomNavigationBar: FractionallySizedBox(
-            alignment: Alignment.bottomCenter,
-            heightFactor: 0.09,
-            child: BottomNavigationBar(
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.people_alt_sharp),
-                  label: 'My Team',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.compare_arrows_sharp),
-                  label: 'Matchup',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.format_list_numbered_rounded),
-                  label: 'League',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.sports_baseball_sharp),
-                  label: 'MLB',
-                ),
-              ],
-              currentIndex: _selectedIndex,
-              elevation: 5,
-              type: BottomNavigationBarType.fixed,
-              iconSize: 26,
-              selectedItemColor: theme.primaryColor,
-              onTap: _onItemTapped,
+        onWillPop: _onWillPop,
+        child: appScaffold(
+          context,
+          Center(
+            child: TabBarView(
+              controller: _tabController,
+              children: _widgetOptions,
             ),
-          )),
-    );
+          ),
+          widget,
+          _bottomTabBar(theme),
+        ));
   }
 
   Future<bool> _onWillPop() async {
     if (tabStack.length == 1) {
       if (_selectedIndex != 0) {
-        //stack is [1||2||3]
+        //stack is [1 || 2 || 3]
         tabStack.removeLast();
         setState(() {
-          selectPage(0);
+          _selectPage(0);
         });
       } else {
         return true;
@@ -127,9 +111,18 @@ class _LeagueNavigatorState extends State<LeagueNavigator> {
       //stack is > 1
       tabStack.removeLast();
       setState(() {
-        selectPage(tabStack.last);
+        _selectPage(tabStack.last);
       });
     }
     return false;
+  }
+
+  _tabItem(IconData icon, String label, int i) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+      Icon(icon),
+      Text(label, style: TextStyle(fontSize: 12),),
+    ]);
   }
 }

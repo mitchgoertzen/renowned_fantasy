@@ -110,7 +110,7 @@ class _RosterState extends State<Roster> {
   @override
   Widget build(BuildContext context) {
     //TODO: add daily/weekly/season stats?
-    //TODO: swipe between Batters/Pitchers
+    //TODO: toggle(swipe will interfere with tabs) between Batters/Pitchers
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

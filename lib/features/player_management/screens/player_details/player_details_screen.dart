@@ -1,5 +1,4 @@
 import 'package:fantasy_draft/features/player_management/models/player.dart';
-import 'package:fantasy_draft/global_components/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'components/player_actions.dart';
 import 'components/player_info.dart';
@@ -12,9 +11,7 @@ class PlayerDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return appScaffold(
-        context,
-        ListView(
+    return ListView(
           children: [
             Image.asset(
               'assets/images/arozarena.png',
@@ -27,7 +24,6 @@ class PlayerDetails extends StatelessWidget {
             Center(child: PlayerActions()),
             PlayerStats(),
           ],
-        ),
-        this);
+        );
   }
 }
