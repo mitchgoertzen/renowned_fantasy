@@ -1,9 +1,11 @@
+import 'package:fantasy_draft/features/leagues/league_navigator.dart';
 import 'package:fantasy_draft/nav_list.dart';
+import 'package:fantasy_draft/utils/navigation_animation.dart';
 import 'package:flutter/material.dart';
 
 import '../features/main/screens/home.dart';
 
-FractionallySizedBox appDrawer(BuildContext context) {
+FractionallySizedBox appDrawer(BuildContext context, Widget currentPage) {
 
   var theme = Theme.of(context);
   return FractionallySizedBox(
@@ -28,31 +30,38 @@ FractionallySizedBox appDrawer(BuildContext context) {
                             color: theme.colorScheme.secondaryContainer)),
                   ),
                 )),
-            _createDrawerButton(context, AppHome(), Icons.home, 'Home'),
+            _createDrawerButton(context, currentPage, AppHome(), Icons.home, 'Home'),
             _createDrawerButton(
-                context, Placeholder(), Icons.emoji_events, 'Leagues'),
+                context, currentPage, LeagueNavigator(), Icons.emoji_events, 'Leagues'),
             _createDrawerButton(
-                context, Placeholder(), Icons.person, 'Profile'),
+                context, currentPage, Placeholder(), Icons.person, 'Profile'),
             _createDrawerButton(
-                context, NavList(), Icons.add_box_sharp, 'Nav'),
+                context, currentPage, NavList(), Icons.add_box_sharp, 'Nav'),
             SizedBox(
               height: 12,
             ),
             Divider(color: theme.colorScheme.primary),
             _createDrawerButton(
-                context, Placeholder(), Icons.settings, 'Settings'),
+                context, currentPage, Placeholder(), Icons.settings, 'Settings'),
           ],
         )),
       )));
 }
 
 Row _createDrawerButton(
-    BuildContext context, Widget page, IconData icon, String label) {
+    BuildContext context, Widget currentPage, Widget newPage, IconData icon, String label) {
   return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
     TextButton.icon(
       onPressed: () {
         Navigator.pop(context);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+
+        print(currentPage.toString());
+        print(newPage.toString());
+        if(newPage.toString() != currentPage.toString()){
+          Future.delayed(Duration(milliseconds: 200), () {
+            Navigator.of(context).push(NavigationAnimation.createRoute(newPage));
+          });
+        }
       },
       icon: Icon(icon),
       label: Text(style: TextStyle(color: Colors.black),label),

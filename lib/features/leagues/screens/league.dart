@@ -1,8 +1,10 @@
-import 'package:fantasy_draft/global_components/AppScaffold.dart';
+import 'package:fantasy_draft/global_components/app_scaffold.dart';
 import 'package:fantasy_draft/global_components/expandable_list_item.dart';
 import 'package:flutter/material.dart';
 
 class League extends StatelessWidget {
+  const League({super.key});
+
   @override
   Widget build(BuildContext context) {
     return appScaffold(
@@ -25,6 +27,7 @@ class League extends StatelessWidget {
                 ),
                 body: Text('matchup results'))
           ],
-        ));
+        ),
+        this);
   }
 }

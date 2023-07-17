@@ -1,7 +1,9 @@
-import 'package:fantasy_draft/global_components/AppScaffold.dart';
+import 'package:fantasy_draft/global_components/app_scaffold.dart';
 import 'package:flutter/material.dart';
 
 class Matchup extends StatelessWidget {
+  const Matchup({super.key});
+  
   @override
   Widget build(BuildContext context) {
     return appScaffold(
@@ -12,7 +14,8 @@ class Matchup extends StatelessWidget {
            Text('matchup'),
 
           ],
-        )
+        ),
+        this
 
     );
   }

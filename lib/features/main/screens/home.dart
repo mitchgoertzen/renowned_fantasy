@@ -1,5 +1,4 @@
-import 'package:fantasy_draft/features/leagues/screens/watchlist.dart';
-import 'package:fantasy_draft/global_components/AppScaffold.dart';
+import 'package:fantasy_draft/global_components/app_scaffold.dart';
 import 'package:fantasy_draft/global_widgets/Card.dart';
 import 'package:fantasy_draft/main.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +24,7 @@ class AppHome extends StatelessWidget {
               ),
             ],
           ),
-        ));
+        ),
+        this);
   }
 }

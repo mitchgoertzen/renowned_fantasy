@@ -1,5 +1,5 @@
-import 'package:fantasy_draft/global_components/AppBar.dart';
-import 'package:fantasy_draft/global_components/AppDrawer.dart';
+import 'package:fantasy_draft/global_components/app_bar.dart';
+import 'package:fantasy_draft/global_components/app_drawer.dart';
 import 'package:fantasy_draft/main.dart';
 import 'package:fantasy_draft/utils/Utilities.dart';
 import 'package:flutter/material.dart';
@@ -10,12 +10,13 @@ class Watchlist extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     var appState = context.watch<AppState>();
-    var currentPlayer = appState.current;
+
+    Widget page = createCenter(appState, theme, context);
 
     return Scaffold(
-        appBar: appBar(theme),
-        drawer: appDrawer(context),
-        body: createCenter(appState, theme, context));
+        appBar: draftAppBar(theme),
+        drawer: appDrawer(context, this),
+        body: page);
   }
 
   Center createCenter(AppState appState, var theme, BuildContext context) {

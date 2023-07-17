@@ -1,4 +1,4 @@
-import 'package:fantasy_draft/features/player_management/models/Player.dart';
+import 'package:fantasy_draft/features/player_management/models/player.dart';
 import 'package:fantasy_draft/theme/theme.dart';
 import 'package:flutter/material.dart';
 import "package:provider/provider.dart";
@@ -30,11 +30,10 @@ class FantasyDraftState extends State<FantasyDraft> {
 }
 
 class AppState extends ChangeNotifier {
-  var current = Player('Randy', 'Arozarena');
+  var current = Player('Randy', 'Arozarena', ['OF']);
   var favourites = {};
 
   void setCurrent(Player p) {
-    print(p.first);
     current = p;
     notifyListeners();
   }

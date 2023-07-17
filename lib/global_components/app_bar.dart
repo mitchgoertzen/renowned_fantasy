@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-AppBar appBar(ThemeData theme){
+AppBar draftAppBar(ThemeData theme){
   return AppBar(
     centerTitle: true,
     title: const Text(
