@@ -55,8 +55,8 @@ Row _createDrawerButton(
       onPressed: () {
         Navigator.pop(context);
 
-        print(currentPage.toString());
-        print(newPage.toString());
+      //  print(currentPage.toString());
+      //  print(newPage.toString());
         if(newPage.toString() != currentPage.toString()){
           Future.delayed(Duration(milliseconds: 200), () {
             Navigator.of(context).push(NavigationAnimation.createRoute(newPage));

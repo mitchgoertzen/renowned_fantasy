@@ -1,5 +1,4 @@
-import 'dart:collection';
-
+import 'package:fantasy_draft/features/leagues/models/temp_roster.dart';
 import 'package:fantasy_draft/features/player_management/models/player.dart';
 import 'package:fantasy_draft/global_components/player_listing_component.dart';
 import 'package:fantasy_draft/global_components/roster.dart';
@@ -16,75 +15,71 @@ class Team extends StatefulWidget {
 
 class _TeamState extends State<Team> {
   //intial roster
-  Map<int, Player> currentRoster = HashMap();
+ // late Map<int, List<Player>> currentRoster;
+
+  TempRoster temp = TempRoster();
 
   late Roster myRoster;
 
   late PlayerDragManager dragManager;
 
-  List<Player> newPlayers = [];
-
-  List<Player> initialPlayers = [];
-
   List<PlayerItem> playerList = [];
 
   List<Widget> morePlayers = [];
 
+  //List<int, List<Player>> currentRoster;
+
   _TeamState() {
-    newPlayers.add(Player('Player', '1', ['C', 'OF']));
-    newPlayers.add(Player('Player', '2', ['2B', 'SS']));
-    newPlayers.add(Player('Player', '3', ['OF']));
-    newPlayers.add(Player('Player', '4', ['3B', 'OF']));
-    newPlayers.add(Player('Player', '5', ['SP', 'RP']));
-    newPlayers.add(Player('Player', '6', ['SP', 'RP']));
 
-    initialPlayers.add(Player('', '', ['']));
-    initialPlayers.add(Player('', '', ['']));
-    initialPlayers.add(Player('', '', ['']));
-    initialPlayers.add(Player('', '', ['']));
-    initialPlayers.add(Player('', '', ['']));
-    initialPlayers.add(Player('', '', ['']));
-    initialPlayers.add(Player('', '', ['']));
-    initialPlayers.add(Player('', '', ['']));
+   // List<Player> initRoster = TempRoster.getRoster();
 
-    currentRoster[2] = initialPlayers[0];
-    currentRoster[3] = initialPlayers[1];
-    currentRoster[4] = initialPlayers[2];
-    currentRoster[5] = initialPlayers[3];
-    currentRoster[6] = initialPlayers[4];
-    currentRoster[7] = initialPlayers[5];
-    currentRoster[1] = initialPlayers[6];
-    currentRoster[0] = initialPlayers[7];
+    //currentRoster[0] =  {0, initRoster[0]} as Map<int, Player>;
+
+    // for(int i = 2; i < initRoster.length; i++){
+    //    currentRoster[i] = initRoster[i - 2];
+    // }
+
+ //   currentRoster= temp.getRoster();
+
+    //   print(currentRoster.length);
+
+
+    // for(var entry in currentRoster.entries){
+    //   print(entry.value.length);
+    // }
 
 
     dragManager = PlayerDragManager();
 
     myRoster = Roster(
-      teamCallback: (Roster? r) => updateRoster(r!),
-      roster: currentRoster,
-      teamRemove: (String? s) => removePlayer(s!),
+      updateRoster: (Roster? r) => updateRoster(r!),
+      roster: TempRoster.getRoster(),
+      teamRemove: (String? s, Player? p) => removePlayer(s!, p!),
       teamAdd: (Player? p) => addPlayer(p!),
       dragManager: dragManager
     );
 
-    playerList = newPlayers.map((i) => PlayerItem(i, dragManager)).toList();
+    playerList = TempRoster.getRoster()[8]!.map((i) => PlayerItem(i, dragManager)).toList();
 
     for (var p in playerList) {
       morePlayers.add(p.getWidget());
     }
 
+
   }
 
   void updateRoster(Roster r) {
     print('team callback');
+    TempRoster.updateRoster(myRoster.getRoster());
     setState(() {
       myRoster = r;
     });
   }
 
 //if player is already in target --> move that player to playerList
-  void removePlayer(String id) {
+  void removePlayer(String id, Player p) {
     print('REMOVE PLAYER');
+    TempRoster.removeFromBench(p);
     setState(() {
       playerList.removeWhere((element) => element.getID() == id);
       morePlayers.clear();
@@ -97,6 +92,7 @@ class _TeamState extends State<Team> {
 
   void addPlayer(Player p) {
     print('ADD PLAYER');
+    TempRoster.addToBench(p);
     setState(() {
       playerList.add(PlayerItem(p, dragManager));
     });

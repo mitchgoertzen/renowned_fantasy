@@ -42,7 +42,6 @@ class _DraggablePlayerState extends State<DraggablePlayer> {
   @override
   Widget build(BuildContext context) {
 
-    print(widget.key.toString());
 
     return LayoutBuilder(builder: (context, constraints) => Draggable(
         onDragStarted: () {

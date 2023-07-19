@@ -26,6 +26,8 @@ class PositionConverter {
         s = 'SS';
         break;
       case 7:
+      case 8: 
+      case 9:
         s = 'OF';
         break;
     }
@@ -33,7 +35,7 @@ class PositionConverter {
   }
 
   static int positionStringToInt(String s) {
-    int i = -1;
+    int i = 10;
 
     switch (s) {
       case 'RP': i = 0;

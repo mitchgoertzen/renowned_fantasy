@@ -2,12 +2,13 @@ import 'package:fantasy_draft/features/player_management/models/player.dart';
 import 'package:flutter/material.dart';
 
 class DraggableItemTarget extends StatefulWidget {
-  const DraggableItemTarget({super.key, required this.child, required this.callback, required this.position, required this.positionEligibility, required this.playerDragged});
+  const DraggableItemTarget({super.key, required this.child, required this.callback, required this.position, required this.positionEligibility, required this.playerDragged, required this.positionIndex});
 
   final Widget child;
-  final Function(Player? p, int? i) callback; 
-  final Function(List<String>? l, int? i) positionEligibility; 
+  final Function(Player? p, int? t, int? i) callback; 
+  final Function(List<String>? l, int? t) positionEligibility; 
   final int position;
+  final int positionIndex;
   final bool playerDragged;
 
 
@@ -20,10 +21,17 @@ class _DraggableItemTargetState extends State<DraggableItemTarget> {
   Color backgroundColor = Colors.white;
   Player player = Player('','', ['']);
 
+
+
   
 
   @override
   Widget build(BuildContext context) {
+
+
+    // print(widget.position);
+    // print(widget.positionIndex);
+
     return DragTarget<Player>(
                 builder: (
                   BuildContext context,
@@ -37,7 +45,7 @@ class _DraggableItemTargetState extends State<DraggableItemTarget> {
                 },
                 onAccept: (data) {
 
-                  widget.callback(data, widget.position);
+                  widget.callback(data, widget.position, widget.positionIndex);
                   setState(() {
                     player = data;
                     backgroundColor = Colors.white;

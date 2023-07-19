@@ -10,22 +10,28 @@ import 'package:fantasy_draft/utils/position_converter.dart';
 class Roster extends StatefulWidget {
   const Roster(
       {super.key,
-      required this.teamCallback,
+      required this.updateRoster,
       required this.roster,
       required this.teamRemove,
       required this.teamAdd,
       required this.dragManager});
 
   //TODO: rename functions
-  final Function(Roster? r) teamCallback;
-  final Function(String? s) teamRemove;
+  final Function(Roster? r) updateRoster;
+  final Function(String? s, Player? p) teamRemove;
   final Function(Player? p) teamAdd;
-  final Map<int, Player> roster;
+  //        pos, players
+  final Map<int, List<Player>> roster;
 
   final PlayerDragManager dragManager;
 
   @override
   State<Roster> createState() => _RosterState();
+
+
+    Map<int, List<Player>> getRoster(){
+    return roster;
+  }
 }
 
 class _RosterState extends State<Roster> {
@@ -44,27 +50,38 @@ class _RosterState extends State<Roster> {
   //   });
   // }
 
-  void callback(Player newPlayer, int targetPosition) {
+  void callback(Player newPlayer, int targetPosition, int index) {
     print('roster callback');
 
     //player is eligble for position slot
+    //newPlayer is player being dragged
+    //if newPlayer has targetPosition listed -> begin checks
     if (newPlayer.positions
         .contains(PositionConverter.positionIntToString(targetPosition))) {
-      checkForPlayerInSlot(newPlayer);
+      //find the slot that this player was previously in
+      findPreviousPlayerSlot(newPlayer, index);
 
-      if (widget.roster[targetPosition]?.first != '' &&
-          widget.roster[targetPosition]?.id != newPlayer.id) {
+      print('target: $targetPosition');
+      print('index: $index');
+      print('new player ${newPlayer.id}');
+      print(widget.roster[targetPosition]);
+      print(widget.roster[targetPosition]![index].first);
+      print(widget.roster[targetPosition]![index].id);
+
+      if (widget.roster[targetPosition]![index].first != '' &&
+          widget.roster[targetPosition]![index].id != newPlayer.id) {
+
         //target has a current player
         print('target is not empty');
-        checkForAvailablePosition(widget.roster[targetPosition]!);
+        checkForAvailablePosition(widget.roster[targetPosition]![index]);
       }
 
       setState(() {
-        widget.roster[targetPosition] = newPlayer;
+        widget.roster[targetPosition]![index] = newPlayer;
       });
 
-      widget.teamRemove(newPlayer.last.hashCode.toString());
-      widget.teamCallback(widget);
+      widget.teamRemove(newPlayer.last.hashCode.toString(), newPlayer);
+      widget.updateRoster(widget);
     }
   }
 
@@ -76,35 +93,58 @@ class _RosterState extends State<Roster> {
     return false;
   }
 
-  void checkForPlayerInSlot(Player p) {
+  void findPreviousPlayerSlot(Player p, int index) {
     for (String pos in p.positions) {
-      //check player roster slots, remove new player from current slot
-      if (widget.roster[PositionConverter.positionStringToInt(pos)]?.id ==
-          p.id) {
-        widget.roster[PositionConverter.positionStringToInt(pos)] = emptyPlayer;
-        return;
+      if (pos != 'x') {
+        int z = PositionConverter.positionStringToInt(pos);
+        //check player roster slots, remove new player from current slot
+        print('current position to check: ${PositionConverter.positionStringToInt(pos)}');
+        //p is player being dragged
+        //widget... is player
+        for (int i = 0; i < widget.roster[z]!.length; i++) {
+          print('player in this slot: Player ${widget.roster[z]![i].last}');
+          if (widget.roster[z]![i].id == p.id) {
+            widget.roster[z]?[i] = emptyPlayer;
+
+            return;
+          }
+        }
       }
     }
   }
 
   void checkForAvailablePosition(Player p) {
     for (String pos in p.positions) {
-      print(pos);
-      if (widget.roster[PositionConverter.positionStringToInt(pos)]?.first ==
-          '') {
-        //other position is available
-        setState(() {
-          widget.roster[PositionConverter.positionStringToInt(pos)] = p;
-        });
-        return;
+      if (pos != 'x') {
+        for (int i = 0;
+            i <
+                widget
+                    .roster[PositionConverter.positionStringToInt(pos)]!.length;
+            i++) {
+          if (widget.roster[PositionConverter.positionStringToInt(pos)]?[i]
+                  .first ==
+              '') {
+            //other position is available
+            setState(() {
+              widget.roster[PositionConverter.positionStringToInt(pos)]?[i] = p;
+            });
+            return;
+          }
+        }
       }
+      //check availability of slots for each
     }
     widget.teamAdd(p);
   }
 
-  double opacityCheck(int pos, ){
-    return (widget.dragManager.playerBeingDragged  && widget.dragManager.positions.contains(PositionConverter.positionIntToString(pos)))?
-                                     widget.dragManager.dragOpacity / 2: widget.dragManager.dragOpacity;
+  double opacityCheck(
+    int pos,
+  ) {
+    return (widget.dragManager.playerBeingDragged &&
+            widget.dragManager.positions
+                .contains(PositionConverter.positionIntToString(pos)))
+        ? widget.dragManager.dragOpacity / 2
+        : widget.dragManager.dragOpacity;
   }
 
   @override
@@ -114,54 +154,59 @@ class _RosterState extends State<Roster> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        for (var entry in widget.roster.entries)
-          ListenableBuilder(
-            listenable: widget.dragManager,
-            builder: (BuildContext context, Widget? child) {
-              return Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: SizedBox(
-                  width: 300,
-                  child: DraggableItemTarget(
-                    position: entry.key,
-                    callback: (Player? p, int? i) => callback(p!, i!),
-                    positionEligibility: (List<String>? l, int? i) =>
-                        playerPositionEligible(l!, i!),
-                    playerDragged: false, //HERE
-                    child: SizedBox(
-                      height: 40,
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: SizedBox(
-                                  width: 20,
-                                  child: Text(
-                                      style: TextStyle(color: Colors.black.withOpacity(min(1, 1 / opacityCheck(entry.key)) )),
-                                      textAlign: TextAlign.center,
-                                      PositionConverter.positionIntToString(
-                                          entry.key)),
+        for (int i = 2; i < widget.roster.entries.length - 1; i++)
+          for (int j = 0; j < widget.roster[i]!.length; j++)
+            ListenableBuilder(
+              listenable: widget.dragManager,
+              builder: (BuildContext context, Widget? child) {
+                return Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: SizedBox(
+                    width: 300,
+                    child: DraggableItemTarget(
+                      position: i,
+                      positionIndex: j,
+                      callback: (Player? p, int? t, int? i) =>
+                          callback(p!, t!, i!),
+                      positionEligibility: (List<String>? l, int? t) =>
+                          playerPositionEligible(l!, t!),
+                      playerDragged: false, //HERE
+                      child: SizedBox(
+                        height: 40,
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: SizedBox(
+                                    width: 20,
+                                    child: Text(
+                                        style: TextStyle(
+                                            color: Colors.black.withOpacity(
+                                                min(1, 1 / opacityCheck(i)))),
+                                        textAlign: TextAlign.center,
+                                        PositionConverter.positionIntToString(
+                                            i)),
+                                  ),
                                 ),
-                              ),
-                              Expanded(
-                                child: DraggablePlayer(
-                                    player: entry.value,
+                                Expanded(
+                                  child: DraggablePlayer(
+                                    player: widget.roster[i]![j],
                                     dragManager: widget.dragManager,
                                     // updatePlayerDrag: () => updatePlayerDrag(),
-                                     opac: opacityCheck(entry.key),
-                                    ),
-                              )
-                            ]),
+                                    opac: opacityCheck(i),
+                                  ),
+                                )
+                              ]),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              );
-            },
-          ),
+                );
+              },
+            ),
       ],
     );
   }
