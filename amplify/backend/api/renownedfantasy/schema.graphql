@@ -1,0 +1,60 @@
+type Player @model @auth(rules: [{allow: private}]) {
+  id: ID!
+  First: String
+  Last: String
+  positions: [String]
+  battingStats: BattingStats
+  pitchingStats: PitchingStats
+}
+
+type PitchingStats {
+  NewField: String
+}
+
+type BattingStats {
+  NewField: String
+}
+
+type Roster {
+  NewField: String
+}
+
+type Record {
+  wins: String
+  losses: String
+  draws: String
+}
+
+type Team @model @auth(rules: [{allow: public}, {allow: private}]) {
+  id: ID!
+  name: String!
+  weeklyTrades: Int
+  manager: ID! @index(name: "byManager")
+  leagueID: ID! @index(name: "byLeague")
+  logo: String
+  record: Record
+  roster: Roster
+  battingStats: BattingStats
+  pitchingStats: PitchingStats
+}
+
+type League @model @auth(rules: [{allow: public}, {allow: private}]) {
+  id: ID!
+  name: String!
+  managers: [Manager] @manyToMany(relationName: "LeagueManager")
+  creationDate: AWSDate!
+  teams: [Team] @hasMany(indexName: "byLeague", fields: ["id"])
+  owner: String
+}
+
+type Manager @model @auth(rules: [{allow: public}, {allow: private}]) {
+  id: ID!
+  username: String!
+  leagues: [League] @manyToMany(relationName: "LeagueManager")
+  teams: [Team] @hasMany(indexName: "byManager", fields: ["id"])
+  userID: String!
+  record: Record
+  avatar: String
+  banner: String
+}
+ 

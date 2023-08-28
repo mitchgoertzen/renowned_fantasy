@@ -1,4 +1,5 @@
-import 'package:fantasy_draft/features/leagues/league_navigator.dart';
+import 'package:fantasy_draft/features/leagues/fantasy_league_home.dart';
+import 'package:fantasy_draft/features/leagues/screens/league_directory_page.dart';
 import 'package:fantasy_draft/nav_list.dart';
 import 'package:fantasy_draft/utils/navigation_animation.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ FractionallySizedBox appDrawer(BuildContext context, Widget currentPage) {
                 )),
             _createDrawerButton(context, currentPage, AppHome(), Icons.home, 'Home'),
             _createDrawerButton(
-                context, currentPage, LeagueNavigator(), Icons.emoji_events, 'Leagues'),
+                context, currentPage, LeagueDirectory(), Icons.emoji_events, 'Leagues'),
             _createDrawerButton(
                 context, currentPage, Placeholder(), Icons.person, 'Profile'),
             _createDrawerButton(
@@ -59,6 +60,7 @@ Row _createDrawerButton(
       //  print(newPage.toString());
         if(newPage.toString() != currentPage.toString()){
           Future.delayed(Duration(milliseconds: 200), () {
+            //NavigationManager.navKey.currentState!.push(NavigationAnimation.createRoute(newPage));
             Navigator.of(context).push(NavigationAnimation.createRoute(newPage));
           });
         }

@@ -1,7 +1,7 @@
 import 'package:fantasy_draft/global_components/app_bar.dart';
 import 'package:fantasy_draft/global_components/app_drawer.dart';
 import 'package:fantasy_draft/main.dart';
-import 'package:fantasy_draft/utils/Utilities.dart';
+import 'package:fantasy_draft/utils/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

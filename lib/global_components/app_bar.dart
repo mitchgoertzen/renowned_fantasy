@@ -1,3 +1,4 @@
+import 'package:fantasy_draft/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 AppBar draftAppBar(ThemeData theme){
@@ -7,7 +8,7 @@ AppBar draftAppBar(ThemeData theme){
       'Fantasy Draft',
     ),
     iconTheme: IconThemeData(color: theme.colorScheme.secondaryContainer),
-    backgroundColor: theme.colorScheme.surfaceTint,
+    backgroundColor: appDefaultTheme().primaryColor,
     foregroundColor: theme.colorScheme.secondaryContainer,
   );
 }

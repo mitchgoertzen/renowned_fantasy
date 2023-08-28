@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:fantasy_draft/features/player_management/models/player.dart';
 import 'package:fantasy_draft/managers/player_drag_manager.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +31,7 @@ class PlayerItem{
       child: Container(
           height: 20,
           color: Colors.white, 
-          child: DraggablePlayer(player: player, dragManager: dragManager ,opac: dragOpacity,)
+          child: DraggablePlayer(player: player, dragManager: dragManager ,opac: dragOpacity,clearPreviousSlot: (String? s) => Void, location: '',)
           ),
       );
  }

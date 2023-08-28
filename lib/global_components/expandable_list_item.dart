@@ -8,21 +8,25 @@ class ExpandableListItem extends StatefulWidget {
   State<ExpandableListItem> createState() => _ExpandableListItemState();
 }
 
+//TODO: custom expandable tile
 class _ExpandableListItemState extends State<ExpandableListItem> {
   bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
-    return ExpansionTile(
-      title: widget.title,
-      children: [
-        widget.body
-      ],
-      onExpansionChanged: (bool expanded) {
-        setState(() {
-          isExpanded = expanded;
-        });
-      },
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        title: widget.title,
+        children: [
+          widget.body
+        ],
+        onExpansionChanged: (bool expanded) {
+          setState(() {
+            isExpanded = expanded;
+          });
+        },
+      ),
     );
   }
 }

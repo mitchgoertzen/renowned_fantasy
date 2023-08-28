@@ -8,7 +8,7 @@ Column sectionContainer(Widget child) {
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
       Padding(
-        padding: const EdgeInsets.all(6.0),
+        padding: const EdgeInsets.only(left: 6.0, right: 6.0),
         child: Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surfaceVariant.withOpacity(0.15),

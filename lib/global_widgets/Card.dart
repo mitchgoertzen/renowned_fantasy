@@ -1,4 +1,4 @@
-import 'package:fantasy_draft/utils/Utilities.dart';
+import 'package:fantasy_draft/utils/utilities.dart';
 import 'package:flutter/material.dart';
 
 class BigCard extends StatelessWidget {

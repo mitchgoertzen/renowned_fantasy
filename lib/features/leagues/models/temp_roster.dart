@@ -1,41 +1,62 @@
-import 'dart:developer';
-
 import 'package:fantasy_draft/features/player_management/models/player.dart';
 
 class TempRoster {
+  static const int maxSize = 8;
   static Map<int, List<Player>> currentRoster = {};
-
-
-
-
-  TempRoster() {
-
-
-    //SS
-    //OF
-    //OF
-    //OF
-    // Player('Player', '11', ['1B, 2B, 3B'])   //EX
-    // Player('Player', '9', ['SP'])
-    // Player('Player', '10', ['SP, RP'])
-  }
+  static Map<int, List<Player>> savedRoster = {};
 
   static Map<int, List<Player>> getRoster() {
     return currentRoster;
   }
 
-  static void updateRoster(Map<int, List<Player>> r){
+  static saveCurrentRoster() {
+    savedRoster = currentRoster
+        .map((key, value) => MapEntry(key, List<Player>.from(value)));
+
+    print('current:');
+    currentRoster.forEach((key, value) {
+      for (var p in value) {
+        print('${p.first} ${p.last}');
+      }
+    });
+  }
+
+  static resetCurrentRoster() {
+    currentRoster = savedRoster;
+  }
+
+  static resetSavedRoster() {
+    print('saved roster reset');
+    savedRoster = {};
+  }
+
+  static int getRosterSize() {
+    int count = 0;
+    currentRoster.forEach((key, value) {
+      for (var p in value) {
+        if (p.first != '') {
+          count++;
+        }
+      }
+    });
+
+    return count;
+  }
+
+  static void updateRoster(Map<int, List<Player>> r) {
+    print('update temp roster');
     currentRoster = r;
   }
 
-  static void addToBench(Player p) {
+  static void addToExtras(Player p) {
     currentRoster[8]!.add(p);
   }
 
-  static void removeFromBench(Player p){
-    currentRoster[8]!.remove(p);
-    print(currentRoster[8]!.length);
+  static void removeFromExtras() {
+    for (int i = 0; i < currentRoster[8]!.length; i++) {
+      if (currentRoster[8]![i].first == '') {
+        currentRoster[8]!.removeAt(i);
+      }
+    }
   }
-
-
 }

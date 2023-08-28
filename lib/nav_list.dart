@@ -1,15 +1,13 @@
-import 'package:fantasy_draft/features/leagues/screens/matchup.dart';
-import 'package:fantasy_draft/features/leagues/screens/watchlist.dart';
-import 'package:fantasy_draft/features/player_management/models/player.dart';
+import 'package:fantasy_draft/features/leagues/screens/matchup_page.dart';
+import 'package:fantasy_draft/features/leagues/screens/watchlist_page.dart';
 import 'package:fantasy_draft/features/player_management/screens/player_details/player_details_screen.dart';
 import 'package:fantasy_draft/global_components/app_scaffold.dart';
 import 'package:fantasy_draft/utils/navigation_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'features/leagues/screens/league.dart';
-import 'features/leagues/screens/team.dart';
-import 'features/player_management/screens/player_add.dart';
+import 'features/leagues/models/temp_fantasy_league.dart';
+import 'features/leagues/screens/fantasy_league_page.dart';
 import 'main.dart';
 
 class NavList extends StatelessWidget {
@@ -25,11 +23,11 @@ class NavList extends StatelessWidget {
             mainAxisSpacing: 10,
             crossAxisCount: 3,
             children: [
-              navButton(context, League(), 'League'),
+              navButton(context, FantasyLeaguePage(), 'League'),
               navButton(context, Placeholder(), 'Leagues Home'),
-              navButton(context, Matchup(), 'Matchup'),
+              navButton(context, MatchupPage(matchup: TempFantasyLeague.matchups[0]), 'Matchup'),
               navButton(context, PlayerDetails(appState.current), 'Player Details'),
-              navButton(context, PlayerAdd(playerToAdd: Player('f', '', ['']),), 'Player Add'),
+              //navButton(context, PlayerAdd(playerToAdd: Player('f', '', ['']),), 'Player Add'),
               navButton(context, Placeholder(), 'Stats'),
               navButton(context, Watchlist(), 'Watchlist'),
             ]),

@@ -3,14 +3,17 @@ import 'dart:math';
 
 import 'package:fantasy_draft/features/player_management/models/player.dart';
 import 'package:fantasy_draft/managers/player_drag_manager.dart';
+import 'package:fantasy_draft/utils/utilities.dart';
 import 'package:flutter/material.dart';
 
 class DraggablePlayer extends StatefulWidget {
-   DraggablePlayer({super.key, required this.player, required this.opac, required this.dragManager});
+   DraggablePlayer({super.key, required this.player, required this.opac, required this.dragManager, required this.location, required this.clearPreviousSlot});
 
   final double opac;
   final Player player;
   final PlayerDragManager dragManager;
+  final Function(String? s) clearPreviousSlot;
+  final String location;
 
   @override
   State<DraggablePlayer> createState() => _DraggablePlayerState();
@@ -25,6 +28,7 @@ class _DraggablePlayerState extends State<DraggablePlayer> {
   Container playerBox(double height, double opacity){
     return Container(
           decoration: BoxDecoration(
+            //TODO: match box with theme, update highlight colour when other player ids being dragged
             color: Colors.black.withOpacity(.1 / opacity),
             borderRadius: BorderRadius.circular(5)),
           height: height,
@@ -44,8 +48,11 @@ class _DraggablePlayerState extends State<DraggablePlayer> {
 
 
     return LayoutBuilder(builder: (context, constraints) => Draggable(
+      onDragCompleted: (){
+        print('player placed in target: ${widget.player.last}');
+        widget.clearPreviousSlot(widget.location);
+      },
         onDragStarted: () {
-          print('should update start');
          widget.dragManager.updatePlayerDrag(true, widget.player.positions);  //HERE
           //TODO: set colour of ineligible positions
           setState(() {
@@ -53,8 +60,6 @@ class _DraggablePlayerState extends State<DraggablePlayer> {
           });
         },
         onDragEnd: (DraggableDetails d) {
-
-          print('should update end');
           widget.dragManager.updatePlayerDrag(false, widget.player.positions);  //HERE
           //update here false, 1, pos
         },
@@ -72,22 +77,7 @@ class _DraggablePlayerState extends State<DraggablePlayer> {
       ));
   }
   
-  String playerInfoStringBuilder(Player p) {
-    String info = '';
 
-    info += p.first;
-    info += ' ';
-    info += p.last;
-    info += ' - ';
-    for(int i = 1; i < p.positions.length; i++){
-      info += p.positions[i];
-      if(i < p.positions.length - 1) {
-        info += ', ';
-      }
-    }
-    return info;
-
-  }
 }
 
 
