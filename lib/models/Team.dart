@@ -33,7 +33,6 @@ class Team extends amplify_core.Model {
   final String? _leagueID;
   final String? _logo;
   final Record? _record;
-  final Roster? _roster;
   final BattingStats? _battingStats;
   final PitchingStats? _pitchingStats;
   final amplify_core.TemporalDateTime? _createdAt;
@@ -103,10 +102,6 @@ class Team extends amplify_core.Model {
     return _record;
   }
   
-  Roster? get roster {
-    return _roster;
-  }
-  
   BattingStats? get battingStats {
     return _battingStats;
   }
@@ -123,9 +118,9 @@ class Team extends amplify_core.Model {
     return _updatedAt;
   }
   
-  const Team._internal({required this.id, required name, weeklyTrades, required manager, required leagueID, logo, record, roster, battingStats, pitchingStats, createdAt, updatedAt}): _name = name, _weeklyTrades = weeklyTrades, _manager = manager, _leagueID = leagueID, _logo = logo, _record = record, _roster = roster, _battingStats = battingStats, _pitchingStats = pitchingStats, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Team._internal({required this.id, required name, weeklyTrades, required manager, required leagueID, logo, record, battingStats, pitchingStats, createdAt, updatedAt}): _name = name, _weeklyTrades = weeklyTrades, _manager = manager, _leagueID = leagueID, _logo = logo, _record = record, _battingStats = battingStats, _pitchingStats = pitchingStats, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Team({String? id, required String name, int? weeklyTrades, required String manager, required String leagueID, String? logo, Record? record, Roster? roster, BattingStats? battingStats, PitchingStats? pitchingStats}) {
+  factory Team({String? id, required String name, int? weeklyTrades, required String manager, required String leagueID, String? logo, Record? record, BattingStats? battingStats, PitchingStats? pitchingStats}) {
     return Team._internal(
       id: id == null ? amplify_core.UUID.getUUID() : id,
       name: name,
@@ -134,7 +129,6 @@ class Team extends amplify_core.Model {
       leagueID: leagueID,
       logo: logo,
       record: record,
-      roster: roster,
       battingStats: battingStats,
       pitchingStats: pitchingStats);
   }
@@ -154,7 +148,6 @@ class Team extends amplify_core.Model {
       _leagueID == other._leagueID &&
       _logo == other._logo &&
       _record == other._record &&
-      _roster == other._roster &&
       _battingStats == other._battingStats &&
       _pitchingStats == other._pitchingStats;
   }
@@ -174,7 +167,6 @@ class Team extends amplify_core.Model {
     buffer.write("leagueID=" + "$_leagueID" + ", ");
     buffer.write("logo=" + "$_logo" + ", ");
     buffer.write("record=" + (_record != null ? _record!.toString() : "null") + ", ");
-    buffer.write("roster=" + (_roster != null ? _roster!.toString() : "null") + ", ");
     buffer.write("battingStats=" + (_battingStats != null ? _battingStats!.toString() : "null") + ", ");
     buffer.write("pitchingStats=" + (_pitchingStats != null ? _pitchingStats!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
@@ -184,7 +176,7 @@ class Team extends amplify_core.Model {
     return buffer.toString();
   }
   
-  Team copyWith({String? name, int? weeklyTrades, String? manager, String? leagueID, String? logo, Record? record, Roster? roster, BattingStats? battingStats, PitchingStats? pitchingStats}) {
+  Team copyWith({String? name, int? weeklyTrades, String? manager, String? leagueID, String? logo, Record? record, BattingStats? battingStats, PitchingStats? pitchingStats}) {
     return Team._internal(
       id: id,
       name: name ?? this.name,
@@ -193,7 +185,6 @@ class Team extends amplify_core.Model {
       leagueID: leagueID ?? this.leagueID,
       logo: logo ?? this.logo,
       record: record ?? this.record,
-      roster: roster ?? this.roster,
       battingStats: battingStats ?? this.battingStats,
       pitchingStats: pitchingStats ?? this.pitchingStats);
   }
@@ -205,7 +196,6 @@ class Team extends amplify_core.Model {
     ModelFieldValue<String>? leagueID,
     ModelFieldValue<String?>? logo,
     ModelFieldValue<Record?>? record,
-    ModelFieldValue<Roster?>? roster,
     ModelFieldValue<BattingStats?>? battingStats,
     ModelFieldValue<PitchingStats?>? pitchingStats
   }) {
@@ -217,7 +207,6 @@ class Team extends amplify_core.Model {
       leagueID: leagueID == null ? this.leagueID : leagueID.value,
       logo: logo == null ? this.logo : logo.value,
       record: record == null ? this.record : record.value,
-      roster: roster == null ? this.roster : roster.value,
       battingStats: battingStats == null ? this.battingStats : battingStats.value,
       pitchingStats: pitchingStats == null ? this.pitchingStats : pitchingStats.value
     );
@@ -233,9 +222,6 @@ class Team extends amplify_core.Model {
       _record = json['record']?['serializedData'] != null
         ? Record.fromJson(new Map<String, dynamic>.from(json['record']['serializedData']))
         : null,
-      _roster = json['roster']?['serializedData'] != null
-        ? Roster.fromJson(new Map<String, dynamic>.from(json['roster']['serializedData']))
-        : null,
       _battingStats = json['battingStats']?['serializedData'] != null
         ? BattingStats.fromJson(new Map<String, dynamic>.from(json['battingStats']['serializedData']))
         : null,
@@ -246,7 +232,7 @@ class Team extends amplify_core.Model {
       _updatedAt = json['updatedAt'] != null ? amplify_core.TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'weeklyTrades': _weeklyTrades, 'manager': _manager, 'leagueID': _leagueID, 'logo': _logo, 'record': _record?.toJson(), 'roster': _roster?.toJson(), 'battingStats': _battingStats?.toJson(), 'pitchingStats': _pitchingStats?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'weeklyTrades': _weeklyTrades, 'manager': _manager, 'leagueID': _leagueID, 'logo': _logo, 'record': _record?.toJson(), 'battingStats': _battingStats?.toJson(), 'pitchingStats': _pitchingStats?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
@@ -257,7 +243,6 @@ class Team extends amplify_core.Model {
     'leagueID': _leagueID,
     'logo': _logo,
     'record': _record,
-    'roster': _roster,
     'battingStats': _battingStats,
     'pitchingStats': _pitchingStats,
     'createdAt': _createdAt,
@@ -272,7 +257,6 @@ class Team extends amplify_core.Model {
   static final LEAGUEID = amplify_core.QueryField(fieldName: "leagueID");
   static final LOGO = amplify_core.QueryField(fieldName: "logo");
   static final RECORD = amplify_core.QueryField(fieldName: "record");
-  static final ROSTER = amplify_core.QueryField(fieldName: "roster");
   static final BATTINGSTATS = amplify_core.QueryField(fieldName: "battingStats");
   static final PITCHINGSTATS = amplify_core.QueryField(fieldName: "pitchingStats");
   static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
@@ -339,12 +323,6 @@ class Team extends amplify_core.Model {
       fieldName: 'record',
       isRequired: false,
       ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embedded, ofCustomTypeName: 'Record')
-    ));
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
-      fieldName: 'roster',
-      isRequired: false,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embedded, ofCustomTypeName: 'Roster')
     ));
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
