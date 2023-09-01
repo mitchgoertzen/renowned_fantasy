@@ -7,11 +7,15 @@ import 'package:fantasy_draft/features/leagues/models/temp_roster.dart';
 import 'package:fantasy_draft/features/player_management/models/player.dart';
 import 'package:fantasy_draft/global_components/app_scaffold.dart';
 import 'package:fantasy_draft/global_widgets/Card.dart';
+import 'package:fantasy_draft/utils/shared_preference_utilities.dart';
 import 'package:flutter/material.dart';
 
 class AppHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SharedPreferencesUtilities.clearIDs();
+    SharedPreferencesUtilities.setCurrentUser();
+
     // var appState = context.watch<AppState>();
     // var currentPlayer = appState.current;
 
@@ -55,8 +59,8 @@ class AppHome extends StatelessWidget {
 
     TempRoster.currentRoster[2]![0] =
         Player(TempFantasyLeague.leagueTeams[0], 'Player', '1-1', ['C']);
-    TempRoster.currentRoster[3]![0] = Player(
-        TempFantasyLeague.leagueTeams[0], 'Player', '1-2', ['1B', '3B']);
+    TempRoster.currentRoster[3]![0] =
+        Player(TempFantasyLeague.leagueTeams[0], 'Player', '1-2', ['1B', '3B']);
     TempRoster.currentRoster[4]![0] =
         Player(TempFantasyLeague.leagueTeams[0], 'Player', '1-3', ['2B']);
     TempRoster.currentRoster[8]!.add(Player(
@@ -68,10 +72,7 @@ class AppHome extends StatelessWidget {
     TempRoster.currentRoster[7]![1] =
         Player(TempFantasyLeague.leagueTeams[0], 'Player', '1-7', ['OF']);
     TempRoster.currentRoster[7]![2] = Player(
-        TempFantasyLeague.leagueTeams[0],
-        'Player',
-        '1-8',
-        ['OF', 'SS', '3B']);
+        TempFantasyLeague.leagueTeams[0], 'Player', '1-8', ['OF', 'SS', '3B']);
 
     TempAvailPlayers.availablePlayers.clear();
     TempAvailPlayers.addPlayer(
@@ -216,7 +217,8 @@ class AppHome extends StatelessWidget {
         teamB: TempFantasyLeague.leagueTeams[2]));
 
     //team 1 week 3
-    TempRoster.currentRoster[2]?[0].addStats({"plateAppearance": 1, "atBat": 1});
+    TempRoster.currentRoster[2]?[0]
+        .addStats({"plateAppearance": 1, "atBat": 1});
     // TempFantasyLeague.leagueTeams[0]
     //     .addStats({"plateAppearance": 1, "atBat": 1});
 

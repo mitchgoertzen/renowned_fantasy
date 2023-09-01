@@ -26,6 +26,7 @@ class _FantasyLeagueHomeState extends State<FantasyLeagueHome>
   List<int> tabStack = [0];
 
   late TabController _tabController;
+  bool _isInAsyncCall = true;
 
   //late String leagueID;
   late String teamID;
@@ -135,6 +136,8 @@ class _FantasyLeagueHomeState extends State<FantasyLeagueHome>
                   child: FantasyTeamPage(
                     team: TempFantasyLeague.leagueTeams[0],
                     teamID: teamID,
+                    isInAsyncCall: _isInAsyncCall,
+                    updateTeam: () => setTeamID(),
                   ),
                 ),
                 FantasyLeagueTab(
@@ -182,6 +185,7 @@ class _FantasyLeagueHomeState extends State<FantasyLeagueHome>
   }
 
   void setTeamID() async {
+    print('SET TEAM ID in league home');
     String leagueID = await SharedPreferencesUtilities.getCurrentLeagueID();
     Manager? manager = await AmplifyUtilities.getCurrentManager();
     String currentUser = manager!.username;
@@ -197,20 +201,22 @@ class _FantasyLeagueHomeState extends State<FantasyLeagueHome>
 
       final teamsInLeague = teamsResponse.data?.items;
 
-      List<Team> teams = teamsInLeague!.whereType<Team>().toList();
-
-      if (teams.isNotEmpty) {
-        Iterable<Team> currentTeam =
-            teams.where((element) => element.manager == currentUser);
+      if (teamsInLeague!.isNotEmpty) {
+        Iterable<Team?> currentTeam =
+            teamsInLeague.where((element) => element!.manager == currentUser);
 
         if (currentTeam.isNotEmpty) {
-          SharedPreferencesUtilities.setCurrentTeamID(currentTeam.first.id);
+          SharedPreferencesUtilities.setCurrentTeamID(currentTeam.first!.id);
 
           setState(() {
-            teamID = currentTeam.first.id;
+            teamID = currentTeam.first!.id;
           });
         }
       }
+
+      setState(() {
+        _isInAsyncCall = false;
+      });
 
       if (teamsResponse.hasErrors) {
         safePrint('errors: ${teamsResponse.errors}');

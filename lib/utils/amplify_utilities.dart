@@ -29,6 +29,7 @@ class AmplifyUtilities {
 
   static Future<League?> getCurrentLeague() async {
     String id = await SharedPreferencesUtilities.getCurrentLeagueID();
+
     try {
       final request =
           ModelQueries.list(League.classType, where: League.ID.eq(id));
