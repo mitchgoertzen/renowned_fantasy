@@ -1,4 +1,3 @@
-import 'package:fantasy_draft/features/leagues/fantasy_league_home.dart';
 import 'package:fantasy_draft/features/leagues/screens/league_directory_page.dart';
 import 'package:fantasy_draft/nav_list.dart';
 import 'package:fantasy_draft/utils/navigation_animation.dart';

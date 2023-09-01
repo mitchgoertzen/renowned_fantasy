@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:fantasy_draft/features/leagues/models/fantasy_league_manager.dart';
 import 'package:fantasy_draft/features/leagues/models/temp_fantasy_league.dart';
 import 'package:fantasy_draft/features/leagues/models/temp_roster.dart';
 import 'package:fantasy_draft/features/player_management/models/player.dart';

@@ -1,5 +1,4 @@
 import 'package:fantasy_draft/features/leagues/components/roster.dart';
-import 'package:fantasy_draft/features/leagues/models/fantasy_league_manager.dart';
 import 'package:fantasy_draft/features/leagues/models/temp_available_players.dart';
 import 'package:fantasy_draft/features/leagues/models/temp_fantasy_league.dart';
 import 'package:fantasy_draft/features/leagues/models/temp_roster.dart';
