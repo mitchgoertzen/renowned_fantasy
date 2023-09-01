@@ -1,5 +1,6 @@
 # Miscellaneous
 *.class
+*.md
 *.log
 *.pyc
 *.swp
@@ -64,3 +65,7 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
+install.cmd
+amplify/hooks/README.md
+amplify/backend/api/renownedfantasy/resolvers/README.md
+amplify/backend/api/renownedfantasy/resolvers/README.md
