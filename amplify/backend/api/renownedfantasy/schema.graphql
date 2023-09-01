@@ -15,10 +15,6 @@ type BattingStats {
   NewField: String
 }
 
-type Roster {
-  NewField: String
-}
-
 type Record {
   wins: String
   losses: String
@@ -33,7 +29,6 @@ type Team @model @auth(rules: [{allow: public}, {allow: private}]) {
   leagueID: ID! @index(name: "byLeague")
   logo: String
   record: Record
-  roster: Roster
   battingStats: BattingStats
   pitchingStats: PitchingStats
 }
