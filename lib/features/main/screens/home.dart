@@ -13,12 +13,12 @@ import 'package:flutter/material.dart';
 class AppHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    //reset shared preference IDs
     SharedPreferencesUtilities.clearIDs();
+    //set current user ID
     SharedPreferencesUtilities.setCurrentUser();
 
-    // var appState = context.watch<AppState>();
-    // var currentPlayer = appState.current;
-
+    //temp data until db is populated
     FantasyLeagueManager memberA = FantasyLeagueManager('A', 'email');
     FantasyLeagueManager memberB = FantasyLeagueManager('B', 'email');
     FantasyLeagueManager memberC = FantasyLeagueManager('C', 'email');
@@ -100,113 +100,6 @@ class AppHome extends StatelessWidget {
         teamA: TempFantasyLeague.leagueTeams[1],
         teamB: TempFantasyLeague.leagueTeams[3]));
 
-    // //team 1 week 1
-    // TempFantasyLeague.leagueTeams[0].addStats({
-    //   "plateAppearance": 1,
-    //   "atBat": 1,
-    //   "hit": 1,
-    //   "homeRun": 1,
-    //   "rbi": 3,
-    //   "run": 1
-    // });
-    // TempFantasyLeague.leagueTeams[0].resetDailyStats();
-    // TempFantasyLeague.leagueTeams[0]
-    //     .addStats({"plateAppearance": 1, "atBat": 1, "hit": 1, "single": 1});
-    // TempFantasyLeague.leagueTeams[0].resetDailyStats();
-
-    // //Team 2 Week 1
-    // TempFantasyLeague.leagueTeams[1]
-    //     .addStats({"plateAppearance": 1, "atBat": 1});
-    // TempFantasyLeague.leagueTeams[1].resetDailyStats();
-    // TempFantasyLeague.leagueTeams[1].addStats(
-    //     {"plateAppearance": 1, "atBat": 1, "hit": 1, "double": 1, "rbi": 1});
-    // TempFantasyLeague.leagueTeams[1].resetDailyStats();
-
-    // //team 3 week 1
-    // TempFantasyLeague.leagueTeams[2]
-    //     .addStats({"plateAppearance": 1, "atBat": 1});
-    // TempFantasyLeague.leagueTeams[2].resetDailyStats();
-    // TempFantasyLeague.leagueTeams[2]
-    //     .addStats({"plateAppearance": 1, "atBat": 1});
-    // TempFantasyLeague.leagueTeams[2].resetDailyStats();
-
-    // //team 4 week 1
-    // TempFantasyLeague.leagueTeams[3]
-    //     .addStats({"plateAppearance": 1, "atBat": 1});
-    // TempFantasyLeague.leagueTeams[3].resetDailyStats();
-    // TempFantasyLeague.leagueTeams[3]
-    //     .addStats({"plateAppearance": 1, "atBat": 1});
-    // TempFantasyLeague.leagueTeams[3].resetDailyStats();
-
-    // TempFantasyLeague.updateStandings();
-
-    // TempFantasyLeague.leagueTeams[0].resetWeeklyStats();
-    // TempFantasyLeague.leagueTeams[1].resetWeeklyStats();
-    // TempFantasyLeague.leagueTeams[3].resetWeeklyStats();
-    // TempFantasyLeague.leagueTeams[2].resetWeeklyStats();
-
-    // TempFantasyLeague.matchups.clear();
-    // TempFantasyLeague.matchups.add(Matchup(
-    //     teamA: TempFantasyLeague.leagueTeams[0],
-    //     teamB: TempFantasyLeague.leagueTeams[1]));
-
-    // TempFantasyLeague.matchups.add(Matchup(
-    //     teamA: TempFantasyLeague.leagueTeams[2],
-    //     teamB: TempFantasyLeague.leagueTeams[3]));
-
-    // //team 1 week 2
-    // TempFantasyLeague.leagueTeams[0]
-    //     .addStats({"plateAppearance": 1, "atBat": 1});
-
-    // TempFantasyLeague.leagueTeams[0].resetDailyStats();
-    // TempFantasyLeague.leagueTeams[0]
-    //     .addStats({"plateAppearance": 1, "atBat": 1});
-
-    // TempFantasyLeague.leagueTeams[0].resetDailyStats();
-
-    // //team 2 week 2
-    // TempFantasyLeague.leagueTeams[1]
-    //     .addStats({"plateAppearance": 1, "atBat": 1, "hit": 1, "single": 1});
-
-    // TempFantasyLeague.leagueTeams[1].resetDailyStats();
-    // TempFantasyLeague.leagueTeams[1]
-    //     .addStats({"plateAppearance": 1, "atBat": 1});
-    // TempFantasyLeague.leagueTeams[1].addStats({"stolenBase": 1});
-
-    // TempFantasyLeague.leagueTeams[1].resetDailyStats();
-
-    // //team 3 week 2
-    // TempFantasyLeague.leagueTeams[2].addStats({
-    //   "plateAppearance": 1,
-    //   "atBat": 1,
-    //   "hit": 1,
-    //   "single": 1,
-    // });
-
-    // TempFantasyLeague.leagueTeams[2].resetDailyStats();
-    // TempFantasyLeague.leagueTeams[2].addStats({
-    //   "plateAppearance": 1,
-    //   "atBat": 1,
-    // });
-    // TempFantasyLeague.leagueTeams[2].resetDailyStats();
-
-    // //team 4 week 2
-    // TempFantasyLeague.leagueTeams[3]
-    //     .addStats({"plateAppearance": 1, "atBat": 1});
-
-    // TempFantasyLeague.leagueTeams[3].resetDailyStats();
-    // TempFantasyLeague.leagueTeams[3]
-    //     .addStats({"plateAppearance": 1, "atBat": 1});
-
-    // TempFantasyLeague.leagueTeams[3].resetDailyStats();
-
-    // TempFantasyLeague.updateStandings();
-
-    // TempFantasyLeague.leagueTeams[0].resetWeeklyStats();
-    // TempFantasyLeague.leagueTeams[1].resetWeeklyStats();
-    // TempFantasyLeague.leagueTeams[2].resetWeeklyStats();
-    // TempFantasyLeague.leagueTeams[3].resetWeeklyStats();
-
     TempFantasyLeague.matchups.clear();
     TempFantasyLeague.matchups.add(Matchup(
         teamA: TempFantasyLeague.leagueTeams[0],
@@ -219,8 +112,6 @@ class AppHome extends StatelessWidget {
     //team 1 week 3
     TempRoster.currentRoster[2]?[0]
         .addStats({"plateAppearance": 1, "atBat": 1});
-    // TempFantasyLeague.leagueTeams[0]
-    //     .addStats({"plateAppearance": 1, "atBat": 1});
 
     TempFantasyLeague.leagueTeams[0].resetDailyStats();
     TempRoster.currentRoster[3]?[0].addStats({
@@ -287,6 +178,7 @@ class AppHome extends StatelessWidget {
         null);
   }
 
+//TODO: move to league settings class?
   static int getPositionMax(int pos) {
     int max = 1;
 

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import '../features/main/screens/home.dart';
 
 FractionallySizedBox appDrawer(BuildContext context, Widget currentPage) {
-
   var theme = Theme.of(context);
   return FractionallySizedBox(
       widthFactor: 0.6,
@@ -30,9 +29,10 @@ FractionallySizedBox appDrawer(BuildContext context, Widget currentPage) {
                             color: theme.colorScheme.secondaryContainer)),
                   ),
                 )),
-            _createDrawerButton(context, currentPage, AppHome(), Icons.home, 'Home'),
             _createDrawerButton(
-                context, currentPage, LeagueDirectory(), Icons.emoji_events, 'Leagues'),
+                context, currentPage, AppHome(), Icons.home, 'Home'),
+            _createDrawerButton(context, currentPage, LeagueDirectory(),
+                Icons.emoji_events, 'Leagues'),
             _createDrawerButton(
                 context, currentPage, Placeholder(), Icons.person, 'Profile'),
             _createDrawerButton(
@@ -41,31 +41,28 @@ FractionallySizedBox appDrawer(BuildContext context, Widget currentPage) {
               height: 12,
             ),
             Divider(color: theme.colorScheme.primary),
-            _createDrawerButton(
-                context, currentPage, Placeholder(), Icons.settings, 'Settings'),
+            _createDrawerButton(context, currentPage, Placeholder(),
+                Icons.settings, 'Settings'),
           ],
         )),
       )));
 }
 
-Row _createDrawerButton(
-    BuildContext context, Widget currentPage, Widget newPage, IconData icon, String label) {
+Row _createDrawerButton(BuildContext context, Widget currentPage,
+    Widget newPage, IconData icon, String label) {
   return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
     TextButton.icon(
       onPressed: () {
         Navigator.pop(context);
-
-      //  print(currentPage.toString());
-      //  print(newPage.toString());
-        if(newPage.toString() != currentPage.toString()){
+        if (newPage.toString() != currentPage.toString()) {
           Future.delayed(Duration(milliseconds: 200), () {
-            //NavigationManager.navKey.currentState!.push(NavigationAnimation.createRoute(newPage));
-            Navigator.of(context).push(NavigationAnimation.createRoute(newPage));
+            Navigator.of(context)
+                .push(NavigationAnimation.createRoute(newPage));
           });
         }
       },
       icon: Icon(icon),
-      label: Text(style: TextStyle(color: Colors.black),label),
+      label: Text(style: TextStyle(color: Colors.black), label),
     ),
   ]);
 }

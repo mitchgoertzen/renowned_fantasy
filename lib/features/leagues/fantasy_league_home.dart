@@ -21,24 +21,23 @@ class FantasyLeagueHome extends StatefulWidget {
 
 class _FantasyLeagueHomeState extends State<FantasyLeagueHome>
     with SingleTickerProviderStateMixin {
+  bool _isInAsyncCall = true;
   int _pageIndex = 0;
 
   List<int> tabStack = [0];
 
   late TabController _tabController;
-  bool _isInAsyncCall = true;
-
-  //late String leagueID;
   late String teamID;
 
   @override
   void initState() {
     _tabController = TabController(length: 4, vsync: this);
     teamID = '';
-    setTeamID();
+    setCurrentTeam();
     super.initState();
   }
 
+  //nav keys for each tab, so they may have individual stacks
   Map<int, GlobalKey> navigatorKeys = {
     0: GlobalKey(),
     1: GlobalKey(),
@@ -47,7 +46,7 @@ class _FantasyLeagueHomeState extends State<FantasyLeagueHome>
   };
 
   void _selectPage(int index) {
-    //if current tab is MLB and addPage is open (find better way to check this)
+    //TODO: if current tab is MLB and addPage is open (find better way to check this)
     if (_pageIndex == 3 && TempRoster.savedRoster.isNotEmpty) {
       resetAddPlayer();
     }
@@ -137,7 +136,7 @@ class _FantasyLeagueHomeState extends State<FantasyLeagueHome>
                     team: TempFantasyLeague.leagueTeams[0],
                     teamID: teamID,
                     isInAsyncCall: _isInAsyncCall,
-                    updateTeam: () => setTeamID(),
+                    updateTeam: () => setCurrentTeam(),
                   ),
                 ),
                 FantasyLeagueTab(
@@ -184,27 +183,25 @@ class _FantasyLeagueHomeState extends State<FantasyLeagueHome>
         ));
   }
 
-  void setTeamID() async {
-    print('SET TEAM ID in league home');
+  void setCurrentTeam() async {
+    print('SET TEAM');
     String leagueID = await SharedPreferencesUtilities.getCurrentLeagueID();
     Manager? manager = await AmplifyUtilities.getCurrentManager();
     String currentUser = manager!.username;
 
-    print('sharedPref league id: $leagueID');
-
-//get leagues where id is this id
     try {
       final teamsRequest =
           ModelQueries.list(Team.classType, where: Team.LEAGUEID.eq(leagueID));
       final teamsResponse =
           await Amplify.API.query(request: teamsRequest).response;
-
       final teamsInLeague = teamsResponse.data?.items;
 
+      //1 or more teams in the league
       if (teamsInLeague!.isNotEmpty) {
         Iterable<Team?> currentTeam =
             teamsInLeague.where((element) => element!.manager == currentUser);
 
+        //current user has a team in current league
         if (currentTeam.isNotEmpty) {
           SharedPreferencesUtilities.setCurrentTeamID(currentTeam.first!.id);
 

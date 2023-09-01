@@ -11,7 +11,6 @@ class AmplifyUtilities {
       final request =
           ModelQueries.list(Manager.classType, where: Manager.ID.eq(id));
       final response = await Amplify.API.query(request: request).response;
-
       final managers = response.data!.items;
 
       if (response.hasErrors) {
@@ -29,12 +28,10 @@ class AmplifyUtilities {
 
   static Future<League?> getCurrentLeague() async {
     String id = await SharedPreferencesUtilities.getCurrentLeagueID();
-
     try {
       final request =
           ModelQueries.list(League.classType, where: League.ID.eq(id));
       final response = await Amplify.API.query(request: request).response;
-
       final leagues = response.data!.items;
 
       if (response.hasErrors) {

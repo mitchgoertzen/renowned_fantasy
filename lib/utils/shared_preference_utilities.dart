@@ -34,9 +34,10 @@ class SharedPreferencesUtilities {
   }
 
   //TODO: set current Team?
-  static Future<void> setCurrentTeamID(String id) async {
+  static Future<String> setCurrentTeamID(String id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('currentTeamID', id);
+    return id;
   }
 
   static Future<String> getCurrentTeamID() async {
@@ -51,5 +52,5 @@ class SharedPreferencesUtilities {
     prefs.remove('currentManager');
     prefs.remove('currentLeagueID');
     prefs.remove('currentTeamID');
-    }
+  }
 }

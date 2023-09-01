@@ -17,9 +17,9 @@ class LeagueDirectory extends StatefulWidget {
 }
 
 class LeagueDirectoryState extends State<LeagueDirectory> {
-  var _leagues = <League>[];
+  List<int> _leageMemberCounts = [];
+  List<League> _leagues = [];
   //TODO: get directly from league-manager relation
-  var _leageMemberCounts = <int>[];
 
   bool _isInAsyncCall = false;
 
@@ -46,7 +46,7 @@ class LeagueDirectoryState extends State<LeagueDirectory> {
       final response = await Amplify.API.query(request: request).response;
 
       final todos = response.data?.items;
-      List<int> ls = [];
+      List<int> memberCounts = [];
 
       for (var t in todos!) {
         final rq = ModelQueries.list(LeagueManager.classType,
@@ -55,17 +55,15 @@ class LeagueDirectoryState extends State<LeagueDirectory> {
 
         final managers = rs.data?.items;
 
-        ls.add(managers!.length);
+        memberCounts.add(managers!.length);
       }
-
-      //  print(todos!.length);
       if (response.hasErrors) {
         safePrint('errors: ${response.errors}');
         return;
       }
       setState(() {
         _leagues = todos.whereType<League>().toList();
-        _leageMemberCounts = ls;
+        _leageMemberCounts = memberCounts;
         _isInAsyncCall = false;
       });
     } on ApiException catch (e) {
@@ -139,6 +137,7 @@ class LeagueDirectoryState extends State<LeagueDirectory> {
     );
   }
 
+  //TODO: create class variables for elements that vary with current team
   @override
   Widget build(BuildContext context) {
     return appScaffold(
@@ -195,7 +194,6 @@ class LeagueDirectoryState extends State<LeagueDirectory> {
                                 ),
                                 onDismissed: (_) => _deleteLeague(league),
                                 child: ListTile(
-                                  //TODO: nav to league page
                                   onTap: () => _navigateToLeague(
                                     league: league,
                                   ),
@@ -212,7 +210,6 @@ class LeagueDirectoryState extends State<LeagueDirectory> {
                           ),
                         ),
                         FloatingActionButton(
-                          // Navigate to the page to create new budget entries
                           onPressed: _navigateToCreateLeague,
                           child: const Icon(Icons.add),
                         ),
@@ -223,29 +220,5 @@ class LeagueDirectoryState extends State<LeagueDirectory> {
               ),
         widget,
         null);
-  }
-
-//TODO: universal
-  Future<List<Manager>?> getManagers() async {
-    final currentUser = await Amplify.Auth.getCurrentUser();
-    String id = currentUser.userId;
-    try {
-      final request =
-          ModelQueries.list(Manager.classType, where: Manager.ID.eq(id));
-      final response = await Amplify.API.query(request: request).response;
-
-      final todos = response.data!.items;
-
-      if (response.hasErrors) {
-        safePrint('errors: ${response.errors}');
-        return null;
-      }
-
-      return todos.whereType<Manager>().toList();
-    } on ApiException catch (e) {
-      safePrint('Query failed: $e');
-    }
-
-    return null;
   }
 }

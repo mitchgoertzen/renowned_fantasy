@@ -17,20 +17,19 @@ class CreateLeague extends StatefulWidget {
 
 class _CreateLeagueState extends State<CreateLeague> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController nameController = TextEditingController();
+  final TextEditingController leagueNameController = TextEditingController();
 
-  late final String _nameText;
+  late final String _titleText;
 
   @override
   void initState() {
     super.initState();
-
-    _nameText = 'Create League';
+    _titleText = 'Create League';
   }
 
   @override
   void dispose() {
-    nameController.dispose();
+    leagueNameController.dispose();
     super.dispose();
   }
 
@@ -41,8 +40,7 @@ class _CreateLeagueState extends State<CreateLeague> {
 
     Manager? currentManager;
 
-    // If the form is valid, submit the data
-    final name = nameController.text;
+    final leagueName = leagueNameController.text;
 
     try {
       final leagueRequest = ModelQueries.list(League.classType);
@@ -57,23 +55,22 @@ class _CreateLeagueState extends State<CreateLeague> {
       }
 
       final newLeague = League(
-        name: name, creationDate: TemporalDate(DateTime.now()),
+        name: leagueName,
+        creationDate: TemporalDate(DateTime.now()),
         owner: currentManager!.username,
-        // Managers: usr!.whereType<User>().toList()
       );
 
+      //create new league and add to db
       final request = ModelMutations.create(newLeague);
       await Amplify.API.mutate(request: request).response;
 
       final newLeagueManager =
           LeagueManager(league: newLeague, manager: currentManager);
 
-      final lmRequest = ModelMutations.create(newLeagueManager);
-      await Amplify.API.mutate(request: lmRequest).response;
-
-      final updateLeague = newLeague.copyWith(managers: [newLeagueManager]);
-
-      ModelMutations.update(updateLeague);
+      //create league-manager relation and add to db
+      //since league is new, the only relation is current manager to new league
+      final leagueManagerRequest = ModelMutations.create(newLeagueManager);
+      await Amplify.API.mutate(request: leagueManagerRequest).response;
     } on ApiException catch (e) {
       safePrint('Query failed: $e');
     }
@@ -85,7 +82,7 @@ class _CreateLeagueState extends State<CreateLeague> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_nameText),
+        title: Text(_titleText),
       ),
       body: Align(
         alignment: Alignment.topCenter,
@@ -100,13 +97,13 @@ class _CreateLeagueState extends State<CreateLeague> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextFormField(
-                      controller: nameController,
+                      controller: leagueNameController,
                       decoration: const InputDecoration(
-                        labelText: 'Title (required)',
+                        labelText: 'League Name (required)',
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter a title';
+                          return 'Please enter a name for your league';
                         }
                         return null;
                       },
@@ -120,7 +117,7 @@ class _CreateLeagueState extends State<CreateLeague> {
                                 Navigator.pop(context)
                               }
                           }),
-                      child: Text(_nameText),
+                      child: Text(_titleText),
                     ),
                   ],
                 ),
