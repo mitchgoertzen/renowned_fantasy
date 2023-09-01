@@ -1,6 +1,6 @@
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:fantasy_draft/features/leagues/fantasy_league_home.dart';
+import 'package:fantasy_draft/features/leagues/components/fantasy_league_home.dart';
 import 'package:fantasy_draft/features/leagues/screens/create_league_page.dart';
 import 'package:fantasy_draft/global_components/app_scaffold.dart';
 import 'package:fantasy_draft/models/ModelProvider.dart';

@@ -1,6 +1,6 @@
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:fantasy_draft/features/leagues/fantasy_league_tab.dart';
+import 'package:fantasy_draft/features/leagues/components/fantasy_league_tab.dart';
 import 'package:fantasy_draft/features/leagues/models/temp_roster.dart';
 import 'package:fantasy_draft/features/leagues/screens/matchup_page.dart';
 import 'package:fantasy_draft/global_components/app_scaffold.dart';
@@ -9,10 +9,10 @@ import 'package:fantasy_draft/models/Team.dart';
 import 'package:fantasy_draft/utils/amplify_utilities.dart';
 import 'package:fantasy_draft/utils/shared_preference_utilities.dart';
 import 'package:flutter/material.dart';
-import 'models/temp_fantasy_league.dart';
-import 'screens/fantasy_league_page.dart';
-import 'screens/sports_league_page.dart';
-import 'screens/fantasy_team_page.dart';
+import '../models/temp_fantasy_league.dart';
+import '../screens/fantasy_league_page.dart';
+import '../screens/sports_league_page.dart';
+import '../screens/fantasy_team_page.dart';
 
 class FantasyLeagueHome extends StatefulWidget {
   @override

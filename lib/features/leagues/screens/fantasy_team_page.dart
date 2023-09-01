@@ -1,6 +1,4 @@
 import 'dart:ffi';
-import 'package:amplify_api/amplify_api.dart';
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:fantasy_draft/features/leagues/components/roster.dart';
 import 'package:fantasy_draft/features/leagues/models/fantasy_team.dart';
 import 'package:fantasy_draft/features/leagues/models/temp_roster.dart';
@@ -8,11 +6,9 @@ import 'package:fantasy_draft/features/leagues/screens/create_team_page.dart';
 import 'package:fantasy_draft/features/player_management/models/player.dart';
 import 'package:fantasy_draft/global_components/section_container.dart';
 import 'package:fantasy_draft/managers/player_drag_manager.dart';
-import 'package:fantasy_draft/models/League.dart';
 import 'package:fantasy_draft/models/Team.dart';
 import 'package:fantasy_draft/theme/theme.dart';
 import 'package:fantasy_draft/utils/navigation_animation.dart';
-import 'package:fantasy_draft/utils/shared_preference_utilities.dart';
 import 'package:flutter/material.dart';
 
 class FantasyTeamPage extends StatefulWidget {
