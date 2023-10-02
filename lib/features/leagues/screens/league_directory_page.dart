@@ -1,10 +1,11 @@
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:fantasy_draft/features/leagues/components/fantasy_league_home.dart';
+import 'package:fantasy_draft/features/leagues/components/join_league_tab.dart';
 import 'package:fantasy_draft/features/leagues/screens/create_league_page.dart';
 import 'package:fantasy_draft/global_components/app_scaffold.dart';
+import 'package:fantasy_draft/global_widgets/row_listing.dart';
 import 'package:fantasy_draft/models/ModelProvider.dart';
-import 'package:fantasy_draft/theme/theme.dart';
 import 'package:fantasy_draft/utils/data_initializers.dart';
 import 'package:fantasy_draft/utils/navigation_animation.dart';
 import 'package:fantasy_draft/utils/shared_preference_utilities.dart';
@@ -81,6 +82,7 @@ class LeagueDirectoryState extends State<LeagueDirectory> {
     }
   }
 
+  //TODO: add warning popup
   Future<void> _deleteLeague(League league) async {
     final request = ModelMutations.delete<League>(league);
     final response = await Amplify.API.mutate(request: request).response;
@@ -105,47 +107,6 @@ class LeagueDirectoryState extends State<LeagueDirectory> {
     // SharedPreferencesUtilities.setCurrentWeek(league.currentWeek);
     Navigator.of(context)
         .push(NavigationAnimation.createRoute(FantasyLeagueHome()));
-  }
-
-  Widget _buildRow({
-    required String name,
-    required String owner,
-    required String managerCount,
-    required String dateCreated,
-    TextStyle? style,
-  }) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            name,
-            textAlign: TextAlign.center,
-            style: style,
-          ),
-        ),
-        Expanded(
-          child: Text(
-            owner,
-            textAlign: TextAlign.center,
-            style: style,
-          ),
-        ),
-        Expanded(
-          child: Text(
-            managerCount,
-            textAlign: TextAlign.center,
-            style: style,
-          ),
-        ),
-        Expanded(
-          child: Text(
-            dateCreated,
-            textAlign: TextAlign.center,
-            style: style,
-          ),
-        ),
-      ],
-    );
   }
 
   //TODO: create class variables for elements that vary with current team
@@ -177,11 +138,11 @@ class LeagueDirectoryState extends State<LeagueDirectory> {
                             ],
                           ),
                         const SizedBox(height: 30),
-                        _buildRow(
+                        buildListingRow(
                           name: 'Title',
                           owner: 'Owner',
                           managerCount: 'Managers',
-                          dateCreated: 'Date Created',
+                          dateCreated: 'Date',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const Divider(),
@@ -208,7 +169,7 @@ class LeagueDirectoryState extends State<LeagueDirectory> {
                                   onTap: () => _navigateToLeague(
                                     league: league,
                                   ),
-                                  title: _buildRow(
+                                  title: buildListingRow(
                                       name: league.name,
                                       owner: league.owner!,
                                       managerCount:
@@ -237,13 +198,12 @@ class LeagueDirectoryState extends State<LeagueDirectory> {
                                     print("join league popup"),
                                     showModalBottomSheet(
                                         context: context,
-                                        builder: (builder) {
-                                          return StatefulBuilder(builder:
-                                              (BuildContext context,
-                                                  StateSetter
-                                                      setState /*You can rename this!*/) {
-                                            return joinLeaguePopUp();
-                                          });
+                                        builder: (context) {
+                                          return FractionallySizedBox(
+                                            heightFactor: .85,
+                                            widthFactor: 1,
+                                            child: JoinLeagueTab(),
+                                          );
                                         },
                                         isScrollControlled: true)
                                   },
@@ -260,39 +220,5 @@ class LeagueDirectoryState extends State<LeagueDirectory> {
               ),
         widget,
         null);
-  }
-
-  Widget joinLeaguePopUp() {
-    ThemeData theme = appDefaultTheme();
-    return FractionallySizedBox(
-      heightFactor: .85,
-      child: Container(
-        color: Colors.white,
-        child: ListView(
-          children: [
-            ToggleButtons(
-                onPressed: (int index) {
-                  print(index);
-                  setState(() {
-                    for (int i = 0; i < toggleSelect.length; i++) {
-                      toggleSelect[i] = i == index;
-                    }
-                  });
-                },
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                selectedBorderColor: theme.colorScheme.secondaryContainer,
-                selectedColor: theme.colorScheme.primary,
-                fillColor: theme.colorScheme.surfaceVariant,
-                color: theme.colorScheme.surfaceVariant,
-                constraints: const BoxConstraints(
-                  minHeight: 20.0,
-                  minWidth: 75.0,
-                ),
-                isSelected: toggleSelect,
-                children: [Text("public"), Text("private")])
-          ],
-        ),
-      ),
-    );
   }
 }

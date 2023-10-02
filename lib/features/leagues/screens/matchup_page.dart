@@ -1,7 +1,7 @@
 import 'dart:ffi';
 import 'package:fantasy_draft/features/leagues/components/matchup_results.dart';
 import 'package:fantasy_draft/global_components/section_container.dart';
-import 'package:fantasy_draft/global_components/state_time_frame_select.dart';
+import 'package:fantasy_draft/global_components/custom_select.dart';
 import 'package:fantasy_draft/models/Matchup.dart';
 import 'package:fantasy_draft/models/Team.dart';
 import 'package:fantasy_draft/theme/theme.dart';
@@ -95,9 +95,9 @@ class MatchupPageState extends State<MatchupPage> {
           teamHeader('B.png', teamTwo.name, scores[1])
         ]),
         Center(
-            child: TimeRangeSelector(
-          fullRange: true,
+            child: CustomSelector(
           getTimeRange: (int? range) => updateTimeRange(range!),
+          options: ["Daily", "Weekly"], selectedIndex: 0,
         )),
         sectionContainer(matchupResults(widget.matchup, timeRange)),
         Padding(

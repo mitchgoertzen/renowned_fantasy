@@ -1,18 +1,22 @@
 import 'package:fantasy_draft/theme/theme.dart';
 import 'package:flutter/material.dart';
 
-class TimeRangeSelector extends StatefulWidget {
-  const TimeRangeSelector(
-      {super.key, required this.fullRange, required this.getTimeRange});
+class CustomSelector extends StatefulWidget {
+  const CustomSelector(
+      {super.key,
+      required this.getTimeRange,
+      required this.options,
+      required this.selectedIndex});
 
-  final bool fullRange;
   final Function(int? range) getTimeRange;
+  final List<String> options;
+  final int selectedIndex;
 
   @override
-  State<StatefulWidget> createState() => TimeRangeSelectorState();
+  State<StatefulWidget> createState() => CustomSelectorState();
 }
 
-class TimeRangeSelectorState extends State<TimeRangeSelector> {
+class CustomSelectorState extends State<CustomSelector> {
   List<Widget> timeRanges = [];
   List<bool> selectedTimeRange = [];
 // widget.
@@ -20,12 +24,11 @@ class TimeRangeSelectorState extends State<TimeRangeSelector> {
   @override
   void initState() {
     super.initState();
-    timeRanges = [Text('Daily'), Text('Weekly')];
-    selectedTimeRange = [false, true];
-    if (widget.fullRange) {
-      timeRanges.add(Text('Season'));
+    for (var element in widget.options) {
+      timeRanges.add(Text(element));
       selectedTimeRange.add(false);
     }
+    selectedTimeRange[widget.selectedIndex] = true;
   }
 
   ThemeData theme = appDefaultTheme();
