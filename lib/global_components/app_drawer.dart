@@ -1,5 +1,6 @@
 import 'package:fantasy_draft/features/leagues/screens/league_directory_page.dart';
 import 'package:fantasy_draft/nav_list.dart';
+import 'package:fantasy_draft/utils/amplify_utilities.dart';
 import 'package:fantasy_draft/utils/navigation_animation.dart';
 import 'package:flutter/material.dart';
 
@@ -43,6 +44,10 @@ FractionallySizedBox appDrawer(BuildContext context, Widget currentPage) {
             Divider(color: theme.colorScheme.primary),
             _createDrawerButton(context, currentPage, Placeholder(),
                 Icons.settings, 'Settings'),
+            TextButton(
+              onPressed: () => AmplifyUtilities.signOutCurrentUser(),
+              child: const Text('Log Out'),
+            ),
           ],
         )),
       )));

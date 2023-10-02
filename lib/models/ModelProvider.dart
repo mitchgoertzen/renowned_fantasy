@@ -26,25 +26,31 @@ import 'Manager.dart';
 import 'Player.dart';
 import 'Team.dart';
 import 'BattingStats.dart';
+import 'LeaguePlayer.dart';
+import 'Matchup.dart';
 import 'PitchingStats.dart';
 import 'Record.dart';
+import 'Roster.dart';
 
 export 'BattingStats.dart';
 export 'League.dart';
 export 'LeagueManager.dart';
+export 'LeaguePlayer.dart';
 export 'Manager.dart';
+export 'Matchup.dart';
 export 'PitchingStats.dart';
 export 'Player.dart';
 export 'Record.dart';
+export 'Roster.dart';
 export 'Team.dart';
 
 class ModelProvider implements amplify_core.ModelProviderInterface {
   @override
-  String version = "b9f26694c1d9d377aba3305e7163b4ec";
+  String version = "fc41ba6c819e05328c8084ff9d33fa1e";
   @override
   List<amplify_core.ModelSchema> modelSchemas = [League.schema, LeagueManager.schema, Manager.schema, Player.schema, Team.schema];
   @override
-  List<amplify_core.ModelSchema> customTypeSchemas = [BattingStats.schema, PitchingStats.schema, Record.schema];
+  List<amplify_core.ModelSchema> customTypeSchemas = [BattingStats.schema, LeaguePlayer.schema, Matchup.schema, PitchingStats.schema, Record.schema, Roster.schema];
   static final ModelProvider _instance = ModelProvider();
 
   static ModelProvider get instance => _instance;

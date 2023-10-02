@@ -4,6 +4,8 @@ import 'package:fantasy_draft/features/leagues/components/fantasy_league_home.da
 import 'package:fantasy_draft/features/leagues/screens/create_league_page.dart';
 import 'package:fantasy_draft/global_components/app_scaffold.dart';
 import 'package:fantasy_draft/models/ModelProvider.dart';
+import 'package:fantasy_draft/theme/theme.dart';
+import 'package:fantasy_draft/utils/data_initializers.dart';
 import 'package:fantasy_draft/utils/navigation_animation.dart';
 import 'package:fantasy_draft/utils/shared_preference_utilities.dart';
 import 'package:fantasy_draft/utils/utilities.dart';
@@ -19,6 +21,10 @@ class LeagueDirectory extends StatefulWidget {
 class LeagueDirectoryState extends State<LeagueDirectory> {
   List<int> _leageMemberCounts = [];
   List<League> _leagues = [];
+
+  List<bool> toggleSelect = [];
+
+  Roster ros = DataInitializers.initializeRoster();
   //TODO: get directly from league-manager relation
 
   bool _isInAsyncCall = false;
@@ -26,10 +32,14 @@ class LeagueDirectoryState extends State<LeagueDirectory> {
   @override
   void initState() {
     super.initState();
+    toggleSelect = [true, false];
     _refreshLeagues();
   }
 
   Future<void> _refreshLeagues() async {
+    print(ros.bench);
+    ros = ros.copyWithModelFieldValues(bench: ModelFieldValue.value(["p1"]));
+    print(ros.bench);
     print('refresh leagues');
 
     setState(() {
@@ -92,6 +102,7 @@ class LeagueDirectoryState extends State<LeagueDirectory> {
     print('league name: ${league.name}');
     print('league: $league');
     SharedPreferencesUtilities.setCurrentLeagueID(league.id);
+    // SharedPreferencesUtilities.setCurrentWeek(league.currentWeek);
     Navigator.of(context)
         .push(NavigationAnimation.createRoute(FantasyLeagueHome()));
   }
@@ -209,10 +220,39 @@ class LeagueDirectoryState extends State<LeagueDirectory> {
                             },
                           ),
                         ),
-                        FloatingActionButton(
-                          onPressed: _navigateToCreateLeague,
-                          child: const Icon(Icons.add),
-                        ),
+                        Container(
+                          color: Color.fromARGB(255, 224, 242, 250),
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.only(top: 10.0, bottom: 15.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                TextButton(
+                                  onPressed: _navigateToCreateLeague,
+                                  child: const Text("Create League"),
+                                ),
+                                TextButton(
+                                  onPressed: () => {
+                                    print("join league popup"),
+                                    showModalBottomSheet(
+                                        context: context,
+                                        builder: (builder) {
+                                          return StatefulBuilder(builder:
+                                              (BuildContext context,
+                                                  StateSetter
+                                                      setState /*You can rename this!*/) {
+                                            return joinLeaguePopUp();
+                                          });
+                                        },
+                                        isScrollControlled: true)
+                                  },
+                                  child: const Text("Join League"),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -220,5 +260,39 @@ class LeagueDirectoryState extends State<LeagueDirectory> {
               ),
         widget,
         null);
+  }
+
+  Widget joinLeaguePopUp() {
+    ThemeData theme = appDefaultTheme();
+    return FractionallySizedBox(
+      heightFactor: .85,
+      child: Container(
+        color: Colors.white,
+        child: ListView(
+          children: [
+            ToggleButtons(
+                onPressed: (int index) {
+                  print(index);
+                  setState(() {
+                    for (int i = 0; i < toggleSelect.length; i++) {
+                      toggleSelect[i] = i == index;
+                    }
+                  });
+                },
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                selectedBorderColor: theme.colorScheme.secondaryContainer,
+                selectedColor: theme.colorScheme.primary,
+                fillColor: theme.colorScheme.surfaceVariant,
+                color: theme.colorScheme.surfaceVariant,
+                constraints: const BoxConstraints(
+                  minHeight: 20.0,
+                  minWidth: 75.0,
+                ),
+                isSelected: toggleSelect,
+                children: [Text("public"), Text("private")])
+          ],
+        ),
+      ),
+    );
   }
 }

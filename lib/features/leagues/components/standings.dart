@@ -1,27 +1,26 @@
-import 'package:fantasy_draft/features/leagues/models/fantasy_team.dart';
-import 'package:fantasy_draft/features/leagues/models/temp_fantasy_league.dart';
 import 'package:fantasy_draft/global_components/statistic_box.dart';
+import 'package:fantasy_draft/models/Team.dart';
 
 leagueStandings() {
   List<String> categories = ['Team', 'W', 'L', 'T', 'GB'];
-  List<FantasyTeam> teams = TempFantasyLeague.leagueTeams;
+  List<Team> teams = []; //getleagueteams()
 
   List<List<String>> teamData = [];
+  double topTeamTotalGames = 0;
 
   for (var t in teams) {
-    String gamesBehind = (TempFantasyLeague.topTeamTotalGames - t.getTotalGames()).toString();
-    if(gamesBehind == '0.0'){
+    String gamesBehind = (topTeamTotalGames - t.record!.totalGames!).toString();
+    if (gamesBehind == '0.0') {
       gamesBehind = '--';
     }
 
     teamData.add([
-      t.getName(),
-      t.getRecord()[0].toString(),
-      t.getRecord()[1].toString(),
-      t.getRecord()[2].toString(),
+      t.name,
+      t.record!.wins.toString(),
+      t.record!.wins.toString(),
+      t.record!.wins.toString(),
       gamesBehind
     ]);
-
 
     // print('${t.getName()} total games: ${t.getTotalGames()}');
   }

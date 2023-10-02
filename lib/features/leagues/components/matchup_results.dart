@@ -1,6 +1,8 @@
-import 'package:fantasy_draft/features/leagues/models/matchup.dart';
-import 'package:fantasy_draft/features/leagues/models/temp_fantasy_league.dart';
+import 'package:fantasy_draft/models/Matchup.dart';
+import 'package:fantasy_draft/models/Team.dart';
 import 'package:fantasy_draft/theme/theme.dart';
+import 'package:fantasy_draft/utils/amplify_utilities.dart';
+import 'package:fantasy_draft/utils/shared_preference_utilities.dart';
 import 'package:flutter/material.dart';
 
 categorySpan(TextSpan text, TextAlign align, bool winningTeam, int team) {
@@ -8,18 +10,19 @@ categorySpan(TextSpan text, TextAlign align, bool winningTeam, int team) {
   BorderRadius borderRadius = BorderRadius.circular(5);
   if (winningTeam) {
     highlightColour = appDefaultTheme().primaryColorLight;
-    if(team == 1){
-      borderRadius =  BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5));
-    }else{
-
-      borderRadius =  BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5));
+    if (team == 1) {
+      borderRadius = BorderRadius.only(
+          topLeft: Radius.circular(5), bottomLeft: Radius.circular(5));
+    } else {
+      borderRadius = BorderRadius.only(
+          topRight: Radius.circular(5), bottomRight: Radius.circular(5));
     }
   }
 
   return WidgetSpan(
       child: Container(
-          decoration: BoxDecoration(
-              color: highlightColour, borderRadius: borderRadius),
+          decoration:
+              BoxDecoration(color: highlightColour, borderRadius: borderRadius),
           child: FractionallySizedBox(
             widthFactor: .35,
             child: Padding(
@@ -67,9 +70,16 @@ statCategoryListing(String categoryLabel, var score1, var score2) {
           WidgetSpan(
               child: Container(
                   decoration: BoxDecoration(
-                      color: (score1.compareTo(score2) != 0) ? appDefaultTheme().primaryColorLight : Colors.transparent,
-                      borderRadius: (winningTeam == 1) ? BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)): 
-                      BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5))),
+                      color: (score1.compareTo(score2) != 0)
+                          ? appDefaultTheme().primaryColorLight
+                          : Colors.transparent,
+                      borderRadius: (winningTeam == 1)
+                          ? BorderRadius.only(
+                              topRight: Radius.circular(5),
+                              bottomRight: Radius.circular(5))
+                          : BorderRadius.only(
+                              topLeft: Radius.circular(5),
+                              bottomLeft: Radius.circular(5))),
                   child: SizedBox(
                       width: boxSize,
                       child: Center(
@@ -87,24 +97,28 @@ statCategoryListing(String categoryLabel, var score1, var score2) {
 }
 
 matchupResults(Matchup matchup, int timeRange) {
-  Map<String, dynamic> teamAStats;
-  Map<String, dynamic> teamBStats;
-  if (timeRange == 0) {
-    teamAStats = matchup.teamA.getDailyStats();
-    teamBStats = matchup.teamB.getDailyStats();
-  } else if (timeRange == 1) {
-    teamAStats = matchup.teamA.getWeeklyStats();
-    teamBStats = matchup.teamB.getWeeklyStats();
-  } else {
-    teamAStats = matchup.teamA.getSeasonStats();
-    teamBStats = matchup.teamB.getSeasonStats();
-  }
+  late Map<String, dynamic> teamOneStats;
+  late Map<String, dynamic> teamTwoStats;
+  List<String> leagueStatCategories = ["NewField"];
+  //await SharedPreferencesUtilities.getLeagueCategories();
+
+  AmplifyUtilities.getTeamStats(matchup.teamOne!, timeRange)
+      .then((value) => teamOneStats = value);
+
+  AmplifyUtilities.getTeamStats(matchup.teamTwo!, timeRange)
+      .then((value) => teamTwoStats = value);
+
+  // teamOneStats =
+  //     await AmplifyUtilities.getTeamStats(matchup.teamOne!, timeRange);
+  // teamTwoStats =
+  //     await AmplifyUtilities.getTeamStats(matchup.teamTwo!, timeRange);
+
   return Column(
     children: [
       // Text('extra batting stats dropdown? hits, avg, etc..'),
-      for (String category in TempFantasyLeague.statCategories)
+      for (String category in leagueStatCategories)
         statCategoryListing(
-            category, teamAStats[category], teamBStats[category]),
+            category, teamOneStats[category], teamTwoStats[category]),
 
       //   Text('extra pitching stats dropdown? IP, etc..'),
       statCategoryListing('W', 0, 0),

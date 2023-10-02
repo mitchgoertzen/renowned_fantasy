@@ -1,17 +1,15 @@
-import 'package:fantasy_draft/features/leagues/components/roster.dart';
-import 'package:fantasy_draft/features/leagues/models/temp_available_players.dart';
-import 'package:fantasy_draft/features/leagues/models/temp_fantasy_league.dart';
-import 'package:fantasy_draft/features/leagues/models/temp_roster.dart';
-import 'package:fantasy_draft/features/player_management/models/player.dart';
+import 'package:fantasy_draft/features/leagues/components/roster_component.dart';
 import 'package:fantasy_draft/global_components/draggable_player.dart';
 import 'package:fantasy_draft/global_components/popup_dialogue.dart';
 import 'package:fantasy_draft/global_components/section_container.dart';
 import 'package:fantasy_draft/managers/player_drag_manager.dart';
+import 'package:fantasy_draft/utils/shared_preference_utilities.dart';
+import 'package:fantasy_draft/utils/temp_data.dart';
 import 'package:fantasy_draft/utils/utilities.dart';
 import 'package:flutter/material.dart';
 
 class PlayerAdd extends StatefulWidget {
-  final List<Player> playerToBeAdded;
+  final List<String> playerToBeAdded;
   final VoidCallback closePlayerAdd;
 
   const PlayerAdd(
@@ -23,30 +21,30 @@ class PlayerAdd extends StatefulWidget {
 
 class _PlayerAddState extends State<PlayerAdd> {
   late PlayerDragManager dragManager;
-  late Player addedPlayer;
-  late Roster myRoster;
+  late String addedPlayer;
+  late RosterComponent myRoster;
   bool accept = false;
-  late Player displacedPlayer;
+  late String displacedPlayer;
 
   String logText = '';
   void acceptPlayer(bool b) {
     accept = b;
   }
 
-  List<Player> playersToBeDropped = [];
+  List<String> playersToBeDropped = [];
 
   _PlayerAddState() {
     dragManager = PlayerDragManager();
 
-    myRoster = Roster(
-      updateRoster: (Roster? r) => updateRoster(r!),
-      roster: TempRoster.getRoster(),
-      removePlayerFromExtra: (Player? p) => removePlayerFromDropList(p!),
-      reassignDisplacedPlayer: (Player? p, String? o) =>
+    myRoster = RosterComponent(
+      updateRoster: (RosterComponent? r) => updateRoster(r!),
+      rosterPlayers: TempData.getTempRosterAsMap(),
+      removePlayerFromExtra: (String? p) => removePlayerFromDropList(p!),
+      reassignDisplacedPlayer: (String? p, String? o) =>
           reassignDisplacedPlayer(p!, o!),
       dragManager: dragManager,
       recentPlayerAccepted: (bool? b) => acceptPlayer(b!),
-      extraPlayers: TempRoster.getRoster()[8]!,
+      extraPlayers: TempData.tempRoster.bench!,
     );
   }
 
@@ -54,36 +52,35 @@ class _PlayerAddState extends State<PlayerAdd> {
   void initState() {
     super.initState();
     //save current roster to revert to when page is left NOT via confirm button
-    TempRoster.saveCurrentRoster();
     addedPlayer = widget.playerToBeAdded[0];
-    print('added player: ${addedPlayer.last}');
+    print('added player: $addedPlayer');
     print('init');
-    displacedPlayer = TempFantasyLeague.emptyPlayer;
+    displacedPlayer = "";
   }
 
-  void clearPreviousSlot(String origin) {
+  void clearPreviousSlot(String origin) async {
+    int maxRosterSize = await SharedPreferencesUtilities.getLeagueRosterSize();
     //should only be called if players origin is add list
     if (accept) {
       setState(() {
         logText += 'origin: $origin\n';
 
-        logText += 's: ${TempRoster.getRosterSize()}\n';
+        logText += 's: ${TempData.tempRoster.size}\n';
         logText +=
-            'extra contains displaced player: ${TempRoster.currentRoster[8]!.contains(displacedPlayer)}\n';
-        logText +=
-            'displaced player is empty: ${displacedPlayer.first == ''}\n';
-        logText +=
-            'displaced player name: ${displacedPlayer.first} ${displacedPlayer.last}\n';
-        if (TempRoster.getRosterSize() >= TempRoster.maxSize &&
-            (TempRoster.currentRoster[8]!.contains(displacedPlayer) ||
-                displacedPlayer.first == '')) {
+            'extra contains displaced player: ${TempData.tempRoster.bench!.contains(displacedPlayer)}\n';
+        logText += 'displaced player is empty: ${displacedPlayer == ''}\n';
+        // logText +=
+        //     'displaced player name: ${displacedPlayer} ${displacedPlayer.Last}\n';
+        if (TempData.tempRoster.size! >= maxRosterSize &&
+            (TempData.tempRoster.bench!.contains(displacedPlayer) ||
+                displacedPlayer == '')) {
           logText += 'roster full and player displaced is empty\n';
-          playersToBeDropped.add(TempRoster.currentRoster[8]!.removeLast());
+          playersToBeDropped.add(TempData.tempRoster.bench!.removeLast());
         }
         logText += 'player is removed from add/drop list\n';
         if (origin == 'Add') {
           widget.playerToBeAdded.clear();
-          logText += 'added player: ${addedPlayer.last}\n';
+          logText += 'added player: $addedPlayer\n';
         }
       });
 
@@ -91,27 +88,28 @@ class _PlayerAddState extends State<PlayerAdd> {
       FileStorage.writeCounter(logText, 'log.txt');
     }
 
-    displacedPlayer = TempFantasyLeague.emptyPlayer;
+    displacedPlayer = "";
   }
 
   //when a new player is assigned to an occupied roster slot,
   //the player previously occupying that slot will be displaced
-  void reassignDisplacedPlayer(Player displaced, String newPlayerOrigin) {
+  void reassignDisplacedPlayer(String displaced, String newPlayerOrigin) async {
+    int maxRosterSize = await SharedPreferencesUtilities.getLeagueRosterSize();
     displacedPlayer = displaced;
     print('origin: $newPlayerOrigin');
     //did the new player not come from a roster slot?
     if (newPlayerOrigin != "Roster" &&
-        TempRoster.getRosterSize() >= TempRoster.maxSize) {
-      print('roster size: ${TempRoster.getRosterSize()}');
-      print('roster max: ${TempRoster.maxSize}');
+        TempData.tempRoster.size! >= maxRosterSize) {
+      // print('roster size: ${TempRoster.getRosterSize()}');
+      // print('roster max: ${TempRoster.maxSize}');
 
       setState(() {
-        print('add to drop list');
-        print('displaced player ${displaced.id}');
-        print('player to be added ${addedPlayer.id}');
-        if (displaced.id == addedPlayer.id) {
-          print('player should be added to add list');
-          print('player to be added ${displaced.last}');
+        // print('add to drop list');
+        // print('displaced player ${displaced.id}');
+        // print('player to be added ${addedPlayer.id}');
+        if (displaced == addedPlayer) {
+          // print('player should be added to add list');
+          // print('player to be added ${displaced.Last}');
           widget.playerToBeAdded.add(displaced);
         } else {
           playersToBeDropped.add(displaced);
@@ -119,19 +117,20 @@ class _PlayerAddState extends State<PlayerAdd> {
       });
     } else {
       print('add to extras');
-      TempRoster.addToExtras(displaced);
+      TempData.tempRoster.bench!.add(displaced);
     }
     logText += 'first\n';
   }
 
-  void removePlayerFromDropList(Player p) {
-    TempRoster.removeFromExtras();
+  void removePlayerFromDropList(String p) {
+    //only need if empty player is in bench
+    //TempRoster.removeFromExtras();
     setState(() {
       playersToBeDropped.remove(p);
     });
   }
 
-  void updateRoster(Roster r) {
+  void updateRoster(RosterComponent r) {
     setState(() {
       myRoster = r;
     });
@@ -160,7 +159,7 @@ class _PlayerAddState extends State<PlayerAdd> {
                       Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            for (Player p in widget.playerToBeAdded)
+                            for (String p in widget.playerToBeAdded)
                               SizedBox(
                                 height: 40,
                                 child: DraggablePlayer(
@@ -189,7 +188,7 @@ class _PlayerAddState extends State<PlayerAdd> {
                     child: Column(
                       children: [
                         Text('Player to Drop:'),
-                        for (Player p in playersToBeDropped)
+                        for (String p in playersToBeDropped)
                           SizedBox(
                             height: 40,
                             child: DraggablePlayer(
@@ -219,10 +218,14 @@ class _PlayerAddState extends State<PlayerAdd> {
                     builder: (BuildContext context) => buildPopupDialog(
                         context,
                         () => {
-                              TempRoster.resetSavedRoster(),
-                              TempAvailPlayers.removePlayer(addedPlayer),
-                              for (var p in playersToBeDropped)
-                                TempAvailPlayers.addPlayer(p),
+                              //set roster in db with temp roster
+                              //AmplifyUtilities.updateRoster(TempData.getTempRoster()),
+                              //clear temp roster data
+                              TempData.clearTempRoster(),
+                              //add magnagerID to newly added player
+                              //AmplifyUtilities.removeFreeAgent(addedPlayer);
+                              //remove managerID from dropped player(s)
+                              //AmplifyUtilities.setPlayersAsFreeAgent(playersToBeDropped);
                               print('!!accepted!!'),
                               Navigator.of(context).pop(),
                               widget.closePlayerAdd()
@@ -237,7 +240,8 @@ class _PlayerAddState extends State<PlayerAdd> {
                               TextSpan(text: 'Add '),
                               TextSpan(
                                 text:
-                                    '${addedPlayer.first} ${addedPlayer.last}',
+                                    //TODO: added player info
+                                    '${addedPlayer} ${addedPlayer}',
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               TextSpan(text: ' to your roster '),
@@ -264,7 +268,8 @@ class _PlayerAddState extends State<PlayerAdd> {
 
     for (int i = 0; i < playersToBeDropped.length; i++) {
       dropText.add(TextSpan(
-        text: '${playersToBeDropped[i].first} ${playersToBeDropped[i].last}',
+        //TODO: get dropped player info
+        text: '${playersToBeDropped[i]} ${playersToBeDropped[i]}',
         style: TextStyle(fontWeight: FontWeight.bold),
       ));
       if (i < playersToBeDropped.length - 1) {

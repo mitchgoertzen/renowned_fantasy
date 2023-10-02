@@ -5,8 +5,6 @@ import 'package:fantasy_draft/global_components/app_scaffold.dart';
 import 'package:fantasy_draft/utils/navigation_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'features/leagues/models/temp_fantasy_league.dart';
 import 'features/leagues/screens/fantasy_league_page.dart';
 import 'main.dart';
 
@@ -23,16 +21,17 @@ class NavList extends StatelessWidget {
             mainAxisSpacing: 10,
             crossAxisCount: 3,
             children: [
-              navButton(context, FantasyLeaguePage(), 'League'),
+              // navButton(context, FantasyLeaguePage(), 'League'),
               navButton(context, Placeholder(), 'Leagues Home'),
-              navButton(context, MatchupPage(matchup: TempFantasyLeague.matchups[0]), 'Matchup'),
-              navButton(context, PlayerDetails(appState.current), 'Player Details'),
+              //    navButton(context, MatchupPage(matchup: TempFantasyLeague.matchups[0]), 'Matchup'),
+              navButton(
+                  context, PlayerDetails(appState.current), 'Player Details'),
               //navButton(context, PlayerAdd(playerToAdd: Player('f', '', ['']),), 'Player Add'),
               navButton(context, Placeholder(), 'Stats'),
               navButton(context, Watchlist(), 'Watchlist'),
             ]),
-            this,
-            null);
+        this,
+        null);
   }
 }
 
@@ -44,5 +43,3 @@ ElevatedButton navButton(BuildContext context, Widget page, String label) {
     child: Text(textAlign: TextAlign.center, label),
   );
 }
-
-

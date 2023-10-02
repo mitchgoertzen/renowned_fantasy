@@ -1,23 +1,42 @@
 import 'package:fantasy_draft/features/leagues/components/matchup_results.dart';
 import 'package:fantasy_draft/features/leagues/components/standings.dart';
-import 'package:fantasy_draft/features/leagues/models/matchup.dart';
-import 'package:fantasy_draft/features/leagues/models/temp_fantasy_league.dart';
 import 'package:fantasy_draft/global_components/expandable_list_item.dart';
 import 'package:fantasy_draft/global_components/section_container.dart';
+import 'package:fantasy_draft/models/Matchup.dart';
 import 'package:fantasy_draft/theme/theme.dart';
+import 'package:fantasy_draft/utils/amplify_utilities.dart';
+import 'package:fantasy_draft/utils/utilities.dart';
 import 'package:flutter/material.dart';
 
 class FantasyLeaguePage extends StatelessWidget {
   const FantasyLeaguePage({
     super.key,
+    required this.leagueMatchups,
   });
+
+  final List<Matchup> leagueMatchups;
 
   @override
   Widget build(BuildContext context) {
     ThemeData theme = appDefaultTheme();
 
-    matchupListing(Matchup currentMatchup) {
-      List<int> matchupScore = currentMatchup.calculateScore();
+    matchupListing(Matchup currentMatchup, int timeRange) {
+      String nameOne = '';
+      String nameTwo = '';
+
+      Map<String, dynamic> teamOneStats = {};
+      Map<String, dynamic> teamTwoStats = {};
+      List<int> scores = [];
+
+      // scores = calculateMatchupScores(
+      //     await
+      AmplifyUtilities.getTeamStats(currentMatchup.teamOne!, timeRange)
+          .then((value) => teamOneStats = value);
+      AmplifyUtilities.getTeamStats(currentMatchup.teamTwo!, timeRange)
+          .then((value) => teamTwoStats = value);
+
+      scores = calculateMatchupScores(teamOneStats, teamTwoStats);
+
       return ExpandableListItem(
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -40,17 +59,17 @@ class FantasyLeaguePage extends StatelessWidget {
                     // ),
                     ),
               ),
-              Text(currentMatchup.teamA.getName()),
+              Text(nameOne),
               Text(
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  '${matchupScore[0]}'),
+                  '${scores[0]}'),
               SizedBox(
                 width: 5,
               ),
               Text(
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  '${matchupScore[1]}'),
-              Text(currentMatchup.teamB.getName()),
+                  '${scores[1]}'),
+              Text(nameTwo),
               Container(
                 width: 35,
                 decoration: BoxDecoration(
@@ -96,7 +115,7 @@ class FantasyLeaguePage extends StatelessWidget {
         sectionContainer(Column(
           children: [
             titleHeader('Live Matchups'),
-            for (var m in TempFantasyLeague.getMatchups()) matchupListing(m),
+            for (var m in leagueMatchups) matchupListing(m, 1),
           ],
         ))
       ],

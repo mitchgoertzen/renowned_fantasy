@@ -32,7 +32,6 @@ class TimeRangeSelectorState extends State<TimeRangeSelector> {
 
   @override
   Widget build(BuildContext context) {
-
     return ToggleButtons(
       direction: Axis.horizontal,
       onPressed: (int index) {

@@ -1,157 +1,157 @@
-import 'package:fantasy_draft/features/leagues/models/fantasy_league_manager.dart';
-import 'package:fantasy_draft/features/leagues/models/league_stats.dart';
-import 'package:fantasy_draft/features/player_management/models/player.dart';
+// import 'package:fantasy_draft/features/leagues/models/fantasy_league_manager.dart';
+// import 'package:fantasy_draft/features/leagues/models/league_stats.dart';
+// import 'package:fantasy_draft/features/player_management/models/player.dart';
 
-//TODO: migrate fantasy team functuions to Team data model
-class FantasyTeam {
-  final int _leagueID;
-  final FantasyLeagueManager _owner;
-  
-  int _addCount = 0;
-  int _tradeCount = 0;
-  int _rank = 1;
-  double totalGames = 0;
+// //TODO: migrate fantasy team functuions to Team data model
+// class FantasyTeam {
+//   final int _leagueID;
+//   final FantasyLeagueManager _owner;
 
-  String? _header;
-  String? _logo;
-  String _name;
+//   int _addCount = 0;
+//   int _tradeCount = 0;
+//   int _rank = 1;
+//   double totalGames = 0;
 
-  Map<int, List<Player>> roster;
+//   String? _header;
+//   String? _logo;
+//   String _name;
 
-  //R, HR, SB, OPS, W, SV, K, ERA, WHIP, etc...
-  List<String> _leagueStatCategories = [];
+//   Map<int, List<Player>> roster;
 
-  List<int> _record = [0, 0, 0];
-  //create local roster (player list with assigned positions), which will then be stored in db
+//   //R, HR, SB, OPS, W, SV, K, ERA, WHIP, etc...
+//   List<String> _leagueStatCategories = [];
 
-  FantasyStats _seasonStats = FantasyStats();
-  FantasyStats _weeklyStats = FantasyStats();
-  FantasyStats _dailyStats = FantasyStats();
+//   List<int> _record = [0, 0, 0];
+//   //create local roster (player list with assigned positions), which will then be stored in db
 
-  FantasyTeam(
-      this._owner, this._name, this._leagueStatCategories, this._leagueID, this.roster,
-      [this._logo, this._header]) {
-    //  for(String s in TempFantasyLeague.getStatCategories()){
-    //   _seasonStats[s] = 0;
-    //   _weeklyStats[s] = 0;
-    //   _dailyStats[s] = 0;
-    //  }
-  }
+//   FantasyStats _seasonStats = FantasyStats();
+//   FantasyStats _weeklyStats = FantasyStats();
+//   FantasyStats _dailyStats = FantasyStats();
 
-  void resetDailyStats() {
-    _dailyStats.reset();
-  }
+//   FantasyTeam(this._owner, this._name, this._leagueStatCategories,
+//       this._leagueID, this.roster,
+//       [this._logo, this._header]) {
+//     //  for(String s in TempFantasyLeague.getStatCategories()){
+//     //   _seasonStats[s] = 0;
+//     //   _weeklyStats[s] = 0;
+//     //   _dailyStats[s] = 0;
+//     //  }
+//   }
 
-  Map<String, dynamic> getDailyStats() {
-    return _dailyStats.getStats(_leagueStatCategories);
-  }
+//   void resetDailyStats() {
+//     _dailyStats.reset();
+//   }
 
-  Map<String, dynamic> getWeeklyStats() {
-    return _weeklyStats.getStats(_leagueStatCategories);
-  }
+//   Map<String, dynamic> getDailyStats() {
+//     return _dailyStats.getStats(_leagueStatCategories);
+//   }
 
-  Map<String, dynamic> getSeasonStats() {
-    return _seasonStats.getStats(_leagueStatCategories);
-  }
+//   Map<String, dynamic> getWeeklyStats() {
+//     return _weeklyStats.getStats(_leagueStatCategories);
+//   }
 
-  void resetWeeklyStats() {
-    _weeklyStats = FantasyStats();
-  }
+//   Map<String, dynamic> getSeasonStats() {
+//     return _seasonStats.getStats(_leagueStatCategories);
+//   }
 
-  void addStats(Map<String, int> statPackage) {
-    _dailyStats.addStats(statPackage);
-    _weeklyStats.addStats(statPackage);
-    _seasonStats.addStats(statPackage);
-  }
+//   void resetWeeklyStats() {
+//     _weeklyStats = FantasyStats();
+//   }
 
-  int getLeagueID() {
-    return _leagueID;
-  }
+//   void addStats(Map<String, int> statPackage) {
+//     _dailyStats.addStats(statPackage);
+//     _weeklyStats.addStats(statPackage);
+//     _seasonStats.addStats(statPackage);
+//   }
 
-  FantasyLeagueManager getOwner() {
-    return _owner;
-  }
+//   int getLeagueID() {
+//     return _leagueID;
+//   }
 
-  void editName(String name) {
-    _name = name;
-  }
+//   FantasyLeagueManager getOwner() {
+//     return _owner;
+//   }
 
-  String getName() {
-    return _name;
-  }
+//   void editName(String name) {
+//     _name = name;
+//   }
 
-  replaceLogo(String logo) {
-    _logo = _logo;
-  }
+//   String getName() {
+//     return _name;
+//   }
 
-  String getLogo() {
-    return _logo!;
-  }
+//   replaceLogo(String logo) {
+//     _logo = _logo;
+//   }
 
-  replaceHeader(String header) {
-    _header = header;
-  }
+//   String getLogo() {
+//     return _logo!;
+//   }
 
-  String getHeader() {
-    return _header!;
-  }
+//   replaceHeader(String header) {
+//     _header = header;
+//   }
 
-  void setRank(int r) {
-    _rank = r;
-  }
+//   String getHeader() {
+//     return _header!;
+//   }
 
-  int getRank() {
-    return _rank;
-  }
+//   void setRank(int r) {
+//     _rank = r;
+//   }
 
-  void incrementAdds() {
-    _addCount++;
-  }
+//   int getRank() {
+//     return _rank;
+//   }
 
-  int getAddCount() {
-    return _addCount;
-  }
+//   void incrementAdds() {
+//     _addCount++;
+//   }
 
-  void imcrementTrades() {
-    _tradeCount++;
-  }
+//   int getAddCount() {
+//     return _addCount;
+//   }
 
-  int getTradeCount() {
-    return _tradeCount;
-  }
+//   void imcrementTrades() {
+//     _tradeCount++;
+//   }
 
-  void addLeagueStatCategory(String category) {
-    _leagueStatCategories.add(category);
-  }
+//   int getTradeCount() {
+//     return _tradeCount;
+//   }
 
-  List<String> getLeagueStatCategories() {
-    return _leagueStatCategories;
-  }
+//   void addLeagueStatCategory(String category) {
+//     _leagueStatCategories.add(category);
+//   }
 
-  updateRecord(int w, int l, int t) {
-    totalGames += w;
-    totalGames -= l;
-    totalGames += (t * 0.5);
+//   List<String> getLeagueStatCategories() {
+//     return _leagueStatCategories;
+//   }
 
-    _record[0] += w;
-    _record[1] += l;
-    _record[2] += t;
-  }
+//   updateRecord(int w, int l, int t) {
+//     totalGames += w;
+//     totalGames -= l;
+//     totalGames += (t * 0.5);
 
-  List<int> getRecord() {
-    return _record;
-  }
+//     _record[0] += w;
+//     _record[1] += l;
+//     _record[2] += t;
+//   }
 
-  double getTotalGames(){
-    return totalGames;
-  }
+//   List<int> getRecord() {
+//     return _record;
+//   }
 
-  void setRoster(Map<int, List<Player>> r){
-    print(r);
-    roster = r;
-  }
+//   double getTotalGames() {
+//     return totalGames;
+//   }
 
-  Map<int, List<Player>> getRoster(){
-    return roster;
-  }
-}
+//   void setRoster(Map<int, List<Player>> r) {
+//     //print(r);
+//     roster = r;
+//   }
+
+//   Map<int, List<Player>> getRoster() {
+//     return roster;
+//   }
+// }

@@ -1,4 +1,4 @@
-import 'package:fantasy_draft/features/player_management/models/player.dart';
+import 'package:fantasy_draft/models/Player.dart';
 import 'package:flutter/material.dart';
 import 'components/player_actions.dart';
 import 'components/player_info.dart';
@@ -12,18 +12,18 @@ class PlayerDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-          children: [
-            Image.asset(
-              'assets/images/arozarena.png',
-              width: 600,
-              height: 240,
-              fit: BoxFit.fitWidth,
-              alignment: Alignment.topCenter,
-            ),
-            PlayerInfo(player),
-            Center(child: PlayerActions()),
-            PlayerStats(),
-          ],
-        );
+      children: [
+        Image.asset(
+          'assets/images/arozarena.png',
+          width: 600,
+          height: 240,
+          fit: BoxFit.fitWidth,
+          alignment: Alignment.topCenter,
+        ),
+        PlayerInfo(player),
+        Center(child: PlayerActions()),
+        PlayerStats(),
+      ],
+    );
   }
 }

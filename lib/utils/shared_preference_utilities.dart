@@ -7,8 +7,9 @@ class SharedPreferencesUtilities {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final currentUser = await Amplify.Auth.getCurrentUser();
-    String currentID = currentUser.userId;
-    String currentManager = currentUser.username;
+    final currentID = currentUser.userId;
+    final currentManager = currentUser.username;
+
     prefs.setString('currentUserID', currentID);
     prefs.setString('currentManager', currentManager);
   }
@@ -33,6 +34,26 @@ class SharedPreferencesUtilities {
     return prefs.getString('currentLeagueID') ?? '';
   }
 
+  static Future<void> setCurrentWeek(int w) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('currentLeagueID', w);
+  }
+
+  static Future<int> getCurrentWeek() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('currentWeek') ?? -1;
+  }
+
+  static Future<void> setLeagueCategories(List<String> categories) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setStringList('currentLeagueID', categories);
+  }
+
+  static Future<List<String>> getLeagueCategories() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList('leagueCategories') ?? [];
+  }
+
   //TODO: set current Team?
   static Future<String> setCurrentTeamID(String id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -45,7 +66,7 @@ class SharedPreferencesUtilities {
     return prefs.getString('currentTeamID') ?? '';
   }
 
-  static Future<void> clearIDs() async {
+  static Future<void> clearTemporaryData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //TODO: set strings to variables to avoid typos
     prefs.remove('currentUserID');
@@ -53,4 +74,6 @@ class SharedPreferencesUtilities {
     prefs.remove('currentLeagueID');
     prefs.remove('currentTeamID');
   }
+
+  static getLeagueRosterSize() {}
 }

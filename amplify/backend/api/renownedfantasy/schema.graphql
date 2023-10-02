@@ -1,3 +1,27 @@
+type LeaguePlayer {
+  playerID: String
+  teamID: String
+}
+
+type Matchup {
+  teamOne: ID
+  teamTwo: ID
+  week: Int
+}
+
+type Roster {
+  size: Int
+  catcher: [ID]!
+  firstBase: [ID]!
+  secondBase: [ID]!
+  thirdBase: [ID]!
+  shortStop: [ID]!
+  outfielders: [ID]!
+  startingPitchers: [ID]!
+  reliefPitchers: [ID]!
+  bench: [ID]!
+}
+
 type Player @model @auth(rules: [{allow: private}]) {
   id: ID!
   First: String
@@ -16,9 +40,10 @@ type BattingStats {
 }
 
 type Record {
-  wins: String
-  losses: String
-  draws: String
+  wins: Int
+  losses: Int
+  draws: Int
+  totalGames: Float
 }
 
 type Team @model @auth(rules: [{allow: public}, {allow: private}]) {
@@ -29,8 +54,9 @@ type Team @model @auth(rules: [{allow: public}, {allow: private}]) {
   leagueID: ID! @index(name: "byLeague")
   logo: String
   record: Record
-  battingStats: BattingStats
-  pitchingStats: PitchingStats
+  battingStats: [BattingStats]
+  pitchingStats: [PitchingStats]
+  roster: Roster
 }
 
 type League @model @auth(rules: [{allow: public}, {allow: private}]) {
@@ -40,6 +66,10 @@ type League @model @auth(rules: [{allow: public}, {allow: private}]) {
   creationDate: AWSDate!
   teams: [Team] @hasMany(indexName: "byLeague", fields: ["id"])
   owner: String
+  matchups: [Matchup]
+  statsCatgeories: String
+  leaguePlayers: [LeaguePlayer]
+  currentWeek: Int
 }
 
 type Manager @model @auth(rules: [{allow: public}, {allow: private}]) {

@@ -1,15 +1,15 @@
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:fantasy_draft/features/leagues/components/fantasy_league_tab.dart';
-import 'package:fantasy_draft/features/leagues/models/temp_roster.dart';
 import 'package:fantasy_draft/features/leagues/screens/matchup_page.dart';
 import 'package:fantasy_draft/global_components/app_scaffold.dart';
 import 'package:fantasy_draft/models/Manager.dart';
+import 'package:fantasy_draft/models/Matchup.dart';
 import 'package:fantasy_draft/models/Team.dart';
 import 'package:fantasy_draft/utils/amplify_utilities.dart';
 import 'package:fantasy_draft/utils/shared_preference_utilities.dart';
+import 'package:fantasy_draft/utils/temp_data.dart';
 import 'package:flutter/material.dart';
-import '../models/temp_fantasy_league.dart';
 import '../screens/fantasy_league_page.dart';
 import '../screens/sports_league_page.dart';
 import '../screens/fantasy_team_page.dart';
@@ -23,17 +23,24 @@ class _FantasyLeagueHomeState extends State<FantasyLeagueHome>
     with SingleTickerProviderStateMixin {
   bool _isInAsyncCall = true;
   int _pageIndex = 0;
+  int leagueWeek = 0;
+  Team currentTeam = Team(name: '', manager: '', leagueID: '');
+
+  List<Matchup> leagueMatchups = [];
+  //TODO: init matchup
+  Matchup activeMatchup = Matchup();
 
   List<int> tabStack = [0];
 
-  late TabController _tabController;
   late String teamID;
+  late TabController _tabController;
 
   @override
   void initState() {
     _tabController = TabController(length: 4, vsync: this);
     teamID = '';
     setCurrentTeam();
+    setLeagueWeek();
     super.initState();
   }
 
@@ -47,7 +54,7 @@ class _FantasyLeagueHomeState extends State<FantasyLeagueHome>
 
   void _selectPage(int index) {
     //TODO: if current tab is MLB and addPage is open (find better way to check this)
-    if (_pageIndex == 3 && TempRoster.savedRoster.isNotEmpty) {
+    if (_pageIndex == 3 && TempData.getTempRoster().catcher.isNotEmpty) {
       resetAddPlayer();
     }
     setState(() {
@@ -76,7 +83,8 @@ class _FantasyLeagueHomeState extends State<FantasyLeagueHome>
 
   Future<bool> _onWillPop() async {
     if (Navigator.canPop(navigatorKeys[_pageIndex]!.currentState!.context)) {
-      if (_pageIndex == 3 && TempRoster.savedRoster.isNotEmpty) {
+      //TODO: change check
+      if (_pageIndex == 3 && TempData.getTempRoster().catcher.isEmpty) {
         resetAddPlayer();
         Navigator.pop(navigatorKeys[_pageIndex]!.currentState!.context, true);
       } else {
@@ -113,10 +121,8 @@ class _FantasyLeagueHomeState extends State<FantasyLeagueHome>
   }
 
   void resetAddPlayer() {
-    //reset current roster to saved roster
-    TempRoster.resetCurrentRoster();
     //reset saved roster to {}
-    TempRoster.resetSavedRoster();
+    TempData.clearTempRoster();
   }
 
   @override
@@ -133,7 +139,7 @@ class _FantasyLeagueHomeState extends State<FantasyLeagueHome>
                 FantasyLeagueTab(
                   navigatorKey: navigatorKeys[0]!,
                   child: FantasyTeamPage(
-                    team: TempFantasyLeague.leagueTeams[0],
+                    currentTeam: currentTeam,
                     teamID: teamID,
                     isInAsyncCall: _isInAsyncCall,
                     updateTeam: () => setCurrentTeam(),
@@ -141,11 +147,11 @@ class _FantasyLeagueHomeState extends State<FantasyLeagueHome>
                 ),
                 FantasyLeagueTab(
                   navigatorKey: navigatorKeys[1]!,
-                  child: MatchupPage(matchup: TempFantasyLeague.matchups[0]),
+                  child: MatchupPage(matchup: activeMatchup),
                 ),
                 FantasyLeagueTab(
                   navigatorKey: navigatorKeys[2]!,
-                  child: FantasyLeaguePage(),
+                  child: FantasyLeaguePage(leagueMatchups: leagueMatchups),
                 ),
                 FantasyLeagueTab(
                   navigatorKey: navigatorKeys[3]!,
@@ -198,15 +204,18 @@ class _FantasyLeagueHomeState extends State<FantasyLeagueHome>
 
       //1 or more teams in the league
       if (teamsInLeague!.isNotEmpty) {
-        Iterable<Team?> currentTeam =
+        Iterable<Team?> currentUsersTeam =
             teamsInLeague.where((element) => element!.manager == currentUser);
 
         //current user has a team in current league
-        if (currentTeam.isNotEmpty) {
-          SharedPreferencesUtilities.setCurrentTeamID(currentTeam.first!.id);
+        if (currentUsersTeam.isNotEmpty) {
+          SharedPreferencesUtilities.setCurrentTeamID(
+              currentUsersTeam.first!.id);
 
           setState(() {
-            teamID = currentTeam.first!.id;
+            teamID = currentUsersTeam.first!.id;
+            currentTeam = currentUsersTeam.first!;
+            TempData.setTempRoster(currentTeam.roster!);
           });
         }
       }
@@ -222,5 +231,17 @@ class _FantasyLeagueHomeState extends State<FantasyLeagueHome>
     } on ApiException catch (e) {
       safePrint('Query failed: $e');
     }
+  }
+
+//TODO:
+  void setLeagueWeek() async {
+    int week = await SharedPreferencesUtilities.getCurrentWeek();
+    setState(() {
+      leagueWeek = week;
+    });
+  }
+
+  setMatchups() async {
+    setState(() {});
   }
 }

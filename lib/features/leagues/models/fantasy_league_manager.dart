@@ -1,34 +1,34 @@
-import 'fantasy_team.dart';
+// import 'package:fantasy_draft/models/Team.dart';
 
-class FantasyLeagueManager {
-  String _name;
-  String _email;
+// class FantasyLeagueManager {
+//   String _name;
+//   String _email;
 
-  List<FantasyTeam> _teams = [];
+//   List<Team> _teams = [];
 
-  FantasyLeagueManager(this._name, this._email);
+//   FantasyLeagueManager(this._name, this._email);
 
-  void editName(String newName) {
-    _name = newName;
-  }
+//   void editName(String newName) {
+//     _name = newName;
+//   }
 
-  String getName() {
-    return _name;
-  }
+//   String getName() {
+//     return _name;
+//   }
 
-  void editEmail(String newEmail) {
-    _email = newEmail;
-  }
+//   void editEmail(String newEmail) {
+//     _email = newEmail;
+//   }
 
-  String getEmail() {
-    return _email;
-  }
+//   String getEmail() {
+//     return _email;
+//   }
 
-  void addTeam(FantasyTeam newTeam) {
-    _teams.add(newTeam);
-  }
+//   void addTeam(Team newTeam) {
+//     _teams.add(newTeam);
+//   }
 
-  List<FantasyTeam> getTeams() {
-    return _teams;
-  }
-}
+//   List<Team> getTeams() {
+//     return _teams;
+//   }
+// }

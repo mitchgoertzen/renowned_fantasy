@@ -1,9 +1,13 @@
 import 'dart:ffi';
 import 'package:fantasy_draft/features/leagues/components/matchup_results.dart';
-import 'package:fantasy_draft/features/leagues/models/matchup.dart';
 import 'package:fantasy_draft/global_components/section_container.dart';
 import 'package:fantasy_draft/global_components/state_time_frame_select.dart';
+import 'package:fantasy_draft/models/Matchup.dart';
+import 'package:fantasy_draft/models/Team.dart';
 import 'package:fantasy_draft/theme/theme.dart';
+import 'package:fantasy_draft/utils/amplify_utilities.dart';
+import 'package:fantasy_draft/utils/temp_data.dart';
+import 'package:fantasy_draft/utils/utilities.dart';
 import 'package:flutter/material.dart';
 
 //stateless
@@ -18,6 +22,22 @@ class MatchupPage extends StatefulWidget {
 
 class MatchupPageState extends State<MatchupPage> {
   ThemeData theme = appDefaultTheme();
+
+  late Team teamOne;
+  late Team teamTwo;
+  List<int> scores = [0, 0];
+
+  @override
+  void initState() {
+    String leagueID = "--";
+    if (TempData.seasonStarted) {
+      setMatchupTeams(timeRange);
+    } else {
+      teamOne = Team(name: "1", manager: "None", leagueID: leagueID);
+      teamTwo = Team(name: "2", manager: "None", leagueID: leagueID);
+    }
+    super.initState();
+  }
 
   //0 daily, 1 weekly, 2 season
   //TODO: save time range for each app use?
@@ -71,10 +91,8 @@ class MatchupPageState extends State<MatchupPage> {
         ),
         Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
           //TODO: calculate score once
-          teamHeader('A.jpg', widget.matchup.teamA.getName(),
-              widget.matchup.calculateScore()[0]),
-          teamHeader('B.png', widget.matchup.teamB.getName(),
-              widget.matchup.calculateScore()[1])
+          teamHeader('A.jpg', teamOne.name, scores[0]),
+          teamHeader('B.png', teamTwo.name, scores[1])
         ]),
         Center(
             child: TimeRangeSelector(
@@ -133,5 +151,20 @@ class MatchupPageState extends State<MatchupPage> {
         )
       ],
     );
+  }
+
+//TODO:
+  setMatchupTeams(int timeRange) async {
+    print(widget.matchup.teamOne);
+    print(widget.matchup.teamTwo);
+    Team? t1 = await AmplifyUtilities.getTeam(widget.matchup.teamOne!);
+    Team? t2 = await AmplifyUtilities.getTeam(widget.matchup.teamTwo!);
+
+    setState(() {
+      teamOne = t1!;
+      teamTwo = t2!;
+      scores = calculateMatchupScores(t1.battingStats![timeRange].toJson(),
+          t2.battingStats![timeRange].toJson());
+    });
   }
 }

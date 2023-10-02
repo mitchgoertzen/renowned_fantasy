@@ -1,30 +1,30 @@
-import 'package:fantasy_draft/features/leagues/models/fantasy_team.dart';
-import 'package:flutter/material.dart';
 
-class TeamStandings extends StatefulWidget{
+// import 'package:flutter/material.dart';
 
-  final List<FantasyTeam> teams;
+// class TeamStandings extends StatefulWidget{
 
-  const TeamStandings({super.key, required this.teams});
+//   final List<Team> teams;
 
-  @override
-  State<StatefulWidget> createState() => TeamStandingsState();
-}
+//   const TeamStandings({super.key, required this.teams});
 
-class TeamStandingsState extends State<TeamStandings>{
+//   @override
+//   State<StatefulWidget> createState() => TeamStandingsState();
+// }
 
-
-  teamListing(FantasyTeam team){
-    return Row(children: [Text(team.getName())],);
-  }
+// class TeamStandingsState extends State<TeamStandings>{
 
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: [
-      for(var t in widget.teams)
-        teamListing(t),
-    ],);
-  }
+//   teamListing(FantasyTeam team){
+//     return Row(children: [Text(team.getName())],);
+//   }
 
-}
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(children: [
+//       for(var t in widget.teams)
+//         teamListing(t),
+//     ],);
+//   }
+
+// }

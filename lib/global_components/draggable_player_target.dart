@@ -1,6 +1,5 @@
 import 'package:fantasy_draft/features/leagues/models/temp_fantasy_league.dart';
-import 'package:fantasy_draft/features/leagues/models/temp_roster.dart';
-import 'package:fantasy_draft/features/player_management/models/player.dart';
+import 'package:fantasy_draft/models/Player.dart';
 import 'package:flutter/material.dart';
 
 class DraggableItemTarget extends StatefulWidget {
@@ -11,7 +10,8 @@ class DraggableItemTarget extends StatefulWidget {
       required this.position,
       required this.positionEligibility,
       required this.playerDragged,
-      required this.positionIndex, required this.acceptPlayer});
+      required this.positionIndex,
+      required this.acceptPlayer});
 
   final Widget child;
   final Function(Player? p, int? t, int? i) checkPlayerAccepted;
@@ -28,7 +28,7 @@ class DraggableItemTarget extends StatefulWidget {
 class _DraggableItemTargetState extends State<DraggableItemTarget> {
   String label = 'waiting...';
   Color backgroundColor = Colors.white;
-  Player player = TempFantasyLeague.emptyPlayer;
+  Player player = Player();
 
   @override
   Widget build(BuildContext context) {
@@ -51,24 +51,20 @@ class _DraggableItemTargetState extends State<DraggableItemTarget> {
         //print('accepted');
         //slot in roster accepts player
         if (widget.positionEligibility(data.positions, widget.position)) {
-          
           widget.acceptPlayer(true);
 
           //player has been acepted in roster slot
           widget.checkPlayerAccepted(
               data, widget.position, widget.positionIndex);
 
-              TempRoster.getRosterSize();
-
-            setState(() {
-              player = data;
-              backgroundColor = Colors.white;
-              label = 'waiting';
-            });
-        }else{
+          setState(() {
+            player = data;
+            backgroundColor = Colors.white;
+            label = 'waiting';
+          });
+        } else {
           widget.acceptPlayer(false);
         }
-        
       },
       onWillAccept: (data) {
         if (data != null) {

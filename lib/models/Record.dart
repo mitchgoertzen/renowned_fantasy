@@ -25,29 +25,35 @@ import 'package:amplify_core/amplify_core.dart' as amplify_core;
 
 /** This is an auto generated class representing the Record type in your schema. */
 class Record {
-  final String? _wins;
-  final String? _losses;
-  final String? _draws;
+  final int? _wins;
+  final int? _losses;
+  final int? _draws;
+  final double? _totalGames;
 
-  String? get wins {
+  int? get wins {
     return _wins;
   }
   
-  String? get losses {
+  int? get losses {
     return _losses;
   }
   
-  String? get draws {
+  int? get draws {
     return _draws;
   }
   
-  const Record._internal({wins, losses, draws}): _wins = wins, _losses = losses, _draws = draws;
+  double? get totalGames {
+    return _totalGames;
+  }
   
-  factory Record({String? wins, String? losses, String? draws}) {
+  const Record._internal({wins, losses, draws, totalGames}): _wins = wins, _losses = losses, _draws = draws, _totalGames = totalGames;
+  
+  factory Record({int? wins, int? losses, int? draws, double? totalGames}) {
     return Record._internal(
       wins: wins,
       losses: losses,
-      draws: draws);
+      draws: draws,
+      totalGames: totalGames);
   }
   
   bool equals(Object other) {
@@ -60,7 +66,8 @@ class Record {
     return other is Record &&
       _wins == other._wins &&
       _losses == other._losses &&
-      _draws == other._draws;
+      _draws == other._draws &&
+      _totalGames == other._totalGames;
   }
   
   @override
@@ -71,46 +78,52 @@ class Record {
     var buffer = new StringBuffer();
     
     buffer.write("Record {");
-    buffer.write("wins=" + "$_wins" + ", ");
-    buffer.write("losses=" + "$_losses" + ", ");
-    buffer.write("draws=" + "$_draws");
+    buffer.write("wins=" + (_wins != null ? _wins!.toString() : "null") + ", ");
+    buffer.write("losses=" + (_losses != null ? _losses!.toString() : "null") + ", ");
+    buffer.write("draws=" + (_draws != null ? _draws!.toString() : "null") + ", ");
+    buffer.write("totalGames=" + (_totalGames != null ? _totalGames!.toString() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Record copyWith({String? wins, String? losses, String? draws}) {
+  Record copyWith({int? wins, int? losses, int? draws, double? totalGames}) {
     return Record._internal(
       wins: wins ?? this.wins,
       losses: losses ?? this.losses,
-      draws: draws ?? this.draws);
+      draws: draws ?? this.draws,
+      totalGames: totalGames ?? this.totalGames);
   }
   
   Record copyWithModelFieldValues({
-    ModelFieldValue<String?>? wins,
-    ModelFieldValue<String?>? losses,
-    ModelFieldValue<String?>? draws
+    ModelFieldValue<int?>? wins,
+    ModelFieldValue<int?>? losses,
+    ModelFieldValue<int?>? draws,
+    ModelFieldValue<double?>? totalGames
   }) {
     return Record._internal(
       wins: wins == null ? this.wins : wins.value,
       losses: losses == null ? this.losses : losses.value,
-      draws: draws == null ? this.draws : draws.value
+      draws: draws == null ? this.draws : draws.value,
+      totalGames: totalGames == null ? this.totalGames : totalGames.value
     );
   }
   
   Record.fromJson(Map<String, dynamic> json)  
-    : _wins = json['wins'],
-      _losses = json['losses'],
-      _draws = json['draws'];
+    : _wins = (json['wins'] as num?)?.toInt(),
+      _losses = (json['losses'] as num?)?.toInt(),
+      _draws = (json['draws'] as num?)?.toInt(),
+      _totalGames = (json['totalGames'] as num?)?.toDouble();
   
   Map<String, dynamic> toJson() => {
-    'wins': _wins, 'losses': _losses, 'draws': _draws
+    'wins': _wins, 'losses': _losses, 'draws': _draws, 'totalGames': _totalGames
   };
   
   Map<String, Object?> toMap() => {
     'wins': _wins,
     'losses': _losses,
-    'draws': _draws
+    'draws': _draws,
+    'totalGames': _totalGames
   };
 
   static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
@@ -120,19 +133,25 @@ class Record {
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
       fieldName: 'wins',
       isRequired: false,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.int)
     ));
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
       fieldName: 'losses',
       isRequired: false,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.int)
     ));
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
       fieldName: 'draws',
       isRequired: false,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.int)
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
+      fieldName: 'totalGames',
+      isRequired: false,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.double)
     ));
   });
 }

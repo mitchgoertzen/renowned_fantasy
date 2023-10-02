@@ -1,11 +1,12 @@
 import 'package:amplify_authenticator/amplify_authenticator.dart';
-import 'package:fantasy_draft/features/leagues/models/temp_fantasy_league.dart';
-import 'package:fantasy_draft/features/player_management/models/player.dart';
+import 'package:fantasy_draft/models/Player.dart';
 import 'package:fantasy_draft/theme/theme.dart';
 import 'package:flutter/material.dart';
 import "package:provider/provider.dart";
 import 'aws/configure_amplify.dart';
 import 'features/main/screens/home.dart';
+
+//TODO: add debug output to log, replace print statements
 
 //main function
 Future<void> main() async {
@@ -46,8 +47,7 @@ class FantasyDraftState extends State<FantasyDraft> {
 
 //will probably be obsolete
 class AppState extends ChangeNotifier {
-  var current =
-      Player(TempFantasyLeague.emptyTeam, 'Randy', 'Arozarena', ['OF']);
+  var current = Player();
   var favourites = {};
 
   void setCurrent(Player p) {

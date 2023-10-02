@@ -1,9 +1,8 @@
 import 'dart:math';
 
-import 'package:fantasy_draft/features/leagues/models/temp_available_players.dart';
-import 'package:fantasy_draft/features/player_management/models/player.dart';
 import 'package:fantasy_draft/features/player_management/screens/player_add.dart';
 import 'package:fantasy_draft/global_components/section_container.dart';
+import 'package:fantasy_draft/utils/amplify_utilities.dart';
 import 'package:fantasy_draft/utils/navigation_animation.dart';
 import 'package:fantasy_draft/utils/utilities.dart';
 import 'package:flutter/material.dart';
@@ -47,8 +46,9 @@ class _SportsLeaguePageState extends State<SportsLeaguePage> {
   List<Widget> generateLeaguePlayers(BuildContext context) {
     List<Widget> players = [];
 
-    players = TempAvailPlayers.getAvailPlayers()
-        .map((i) => LeaguePlayer(
+//TODO:
+    players = []
+        .map((i) => PlayerModule(
                 i,
                 () => setState(() {
                       morePlayers = generateLeaguePlayers(context);
@@ -59,26 +59,23 @@ class _SportsLeaguePageState extends State<SportsLeaguePage> {
             .getWidget(context))
         .toList();
 
-    // for (var p in playerList) {
-    //   morePlayers.add(p.getWidget(context));
-    // }
+    for (var p in []) {
+      morePlayers.add(p.getWidget(context));
+    }
 
     return players;
   }
 }
 
-class LeaguePlayer {
-  late final String playerID;
-  late final Player player;
+class PlayerModule {
+  late final String player;
   late VoidCallback callback;
   late VoidCallback pop;
 
-  LeaguePlayer(this.player, this.callback, this.pop) {
-    playerID = player.last.hashCode.toString();
-  }
+  PlayerModule(this.player, this.callback, this.pop);
 
   String getID() {
-    return playerID;
+    return player;
   }
 
   double dragOpacity = 1;

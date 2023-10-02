@@ -2,6 +2,7 @@ import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:fantasy_draft/models/ModelProvider.dart';
 import 'package:fantasy_draft/utils/amplify_utilities.dart';
+import 'package:fantasy_draft/utils/data_initializers.dart';
 import 'package:fantasy_draft/utils/shared_preference_utilities.dart';
 import 'package:flutter/material.dart';
 
@@ -62,12 +63,15 @@ class CreateTeamState extends State<CreateTeam> {
         return false;
       }
 
-      final newTeam = Team(
-        name: name, leagueID: currentLeagueID,
-        manager: currentManager!.username,
-        // Managers: usr!.whereType<User>().toList()
-      );
+      final teamRoster = DataInitializers.initializeRoster();
+      final teamRecord = Record(wins: 0, losses: 0, draws: 0, totalGames: 0);
 
+      final newTeam = Team(
+          name: name,
+          manager: currentManager!.username,
+          leagueID: currentLeagueID,
+          record: teamRecord,
+          roster: teamRoster);
 
       SharedPreferencesUtilities.setCurrentTeamID(newTeam.id);
 
@@ -75,8 +79,6 @@ class CreateTeamState extends State<CreateTeam> {
 
       final request = ModelMutations.create(newTeam);
       await Amplify.API.mutate(request: request).response;
-
-
 
       //add team to league teams
 
@@ -93,7 +95,6 @@ class CreateTeamState extends State<CreateTeam> {
         updatedTeams = [newTeam];
       }
 
-
       print('league teams: $updatedTeams');
 
       League updatedLeague = currentLeague.copyWith(teams: updatedTeams);
@@ -109,7 +110,6 @@ class CreateTeamState extends State<CreateTeam> {
         print('manager teams null');
         updatedTeams = [newTeam];
       }
-
 
       print('manager teams: $updatedTeams');
 

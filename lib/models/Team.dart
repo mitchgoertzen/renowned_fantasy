@@ -21,6 +21,7 @@
 
 import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart' as amplify_core;
+import 'package:collection/collection.dart';
 
 
 /** This is an auto generated class representing the Team type in your schema. */
@@ -33,8 +34,9 @@ class Team extends amplify_core.Model {
   final String? _leagueID;
   final String? _logo;
   final Record? _record;
-  final BattingStats? _battingStats;
-  final PitchingStats? _pitchingStats;
+  final List<BattingStats>? _battingStats;
+  final List<PitchingStats>? _pitchingStats;
+  final Roster? _roster;
   final amplify_core.TemporalDateTime? _createdAt;
   final amplify_core.TemporalDateTime? _updatedAt;
 
@@ -102,12 +104,16 @@ class Team extends amplify_core.Model {
     return _record;
   }
   
-  BattingStats? get battingStats {
+  List<BattingStats>? get battingStats {
     return _battingStats;
   }
   
-  PitchingStats? get pitchingStats {
+  List<PitchingStats>? get pitchingStats {
     return _pitchingStats;
+  }
+  
+  Roster? get roster {
+    return _roster;
   }
   
   amplify_core.TemporalDateTime? get createdAt {
@@ -118,9 +124,9 @@ class Team extends amplify_core.Model {
     return _updatedAt;
   }
   
-  const Team._internal({required this.id, required name, weeklyTrades, required manager, required leagueID, logo, record, battingStats, pitchingStats, createdAt, updatedAt}): _name = name, _weeklyTrades = weeklyTrades, _manager = manager, _leagueID = leagueID, _logo = logo, _record = record, _battingStats = battingStats, _pitchingStats = pitchingStats, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Team._internal({required this.id, required name, weeklyTrades, required manager, required leagueID, logo, record, battingStats, pitchingStats, roster, createdAt, updatedAt}): _name = name, _weeklyTrades = weeklyTrades, _manager = manager, _leagueID = leagueID, _logo = logo, _record = record, _battingStats = battingStats, _pitchingStats = pitchingStats, _roster = roster, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Team({String? id, required String name, int? weeklyTrades, required String manager, required String leagueID, String? logo, Record? record, BattingStats? battingStats, PitchingStats? pitchingStats}) {
+  factory Team({String? id, required String name, int? weeklyTrades, required String manager, required String leagueID, String? logo, Record? record, List<BattingStats>? battingStats, List<PitchingStats>? pitchingStats, Roster? roster}) {
     return Team._internal(
       id: id == null ? amplify_core.UUID.getUUID() : id,
       name: name,
@@ -129,8 +135,9 @@ class Team extends amplify_core.Model {
       leagueID: leagueID,
       logo: logo,
       record: record,
-      battingStats: battingStats,
-      pitchingStats: pitchingStats);
+      battingStats: battingStats != null ? List<BattingStats>.unmodifiable(battingStats) : battingStats,
+      pitchingStats: pitchingStats != null ? List<PitchingStats>.unmodifiable(pitchingStats) : pitchingStats,
+      roster: roster);
   }
   
   bool equals(Object other) {
@@ -148,8 +155,9 @@ class Team extends amplify_core.Model {
       _leagueID == other._leagueID &&
       _logo == other._logo &&
       _record == other._record &&
-      _battingStats == other._battingStats &&
-      _pitchingStats == other._pitchingStats;
+      DeepCollectionEquality().equals(_battingStats, other._battingStats) &&
+      DeepCollectionEquality().equals(_pitchingStats, other._pitchingStats) &&
+      _roster == other._roster;
   }
   
   @override
@@ -169,6 +177,7 @@ class Team extends amplify_core.Model {
     buffer.write("record=" + (_record != null ? _record!.toString() : "null") + ", ");
     buffer.write("battingStats=" + (_battingStats != null ? _battingStats!.toString() : "null") + ", ");
     buffer.write("pitchingStats=" + (_pitchingStats != null ? _pitchingStats!.toString() : "null") + ", ");
+    buffer.write("roster=" + (_roster != null ? _roster!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -176,7 +185,7 @@ class Team extends amplify_core.Model {
     return buffer.toString();
   }
   
-  Team copyWith({String? name, int? weeklyTrades, String? manager, String? leagueID, String? logo, Record? record, BattingStats? battingStats, PitchingStats? pitchingStats}) {
+  Team copyWith({String? name, int? weeklyTrades, String? manager, String? leagueID, String? logo, Record? record, List<BattingStats>? battingStats, List<PitchingStats>? pitchingStats, Roster? roster}) {
     return Team._internal(
       id: id,
       name: name ?? this.name,
@@ -186,7 +195,8 @@ class Team extends amplify_core.Model {
       logo: logo ?? this.logo,
       record: record ?? this.record,
       battingStats: battingStats ?? this.battingStats,
-      pitchingStats: pitchingStats ?? this.pitchingStats);
+      pitchingStats: pitchingStats ?? this.pitchingStats,
+      roster: roster ?? this.roster);
   }
   
   Team copyWithModelFieldValues({
@@ -196,8 +206,9 @@ class Team extends amplify_core.Model {
     ModelFieldValue<String>? leagueID,
     ModelFieldValue<String?>? logo,
     ModelFieldValue<Record?>? record,
-    ModelFieldValue<BattingStats?>? battingStats,
-    ModelFieldValue<PitchingStats?>? pitchingStats
+    ModelFieldValue<List<BattingStats>?>? battingStats,
+    ModelFieldValue<List<PitchingStats>?>? pitchingStats,
+    ModelFieldValue<Roster?>? roster
   }) {
     return Team._internal(
       id: id,
@@ -208,7 +219,8 @@ class Team extends amplify_core.Model {
       logo: logo == null ? this.logo : logo.value,
       record: record == null ? this.record : record.value,
       battingStats: battingStats == null ? this.battingStats : battingStats.value,
-      pitchingStats: pitchingStats == null ? this.pitchingStats : pitchingStats.value
+      pitchingStats: pitchingStats == null ? this.pitchingStats : pitchingStats.value,
+      roster: roster == null ? this.roster : roster.value
     );
   }
   
@@ -222,17 +234,26 @@ class Team extends amplify_core.Model {
       _record = json['record']?['serializedData'] != null
         ? Record.fromJson(new Map<String, dynamic>.from(json['record']['serializedData']))
         : null,
-      _battingStats = json['battingStats']?['serializedData'] != null
-        ? BattingStats.fromJson(new Map<String, dynamic>.from(json['battingStats']['serializedData']))
+      _battingStats = json['battingStats'] is List
+        ? (json['battingStats'] as List)
+          .where((e) => e != null)
+          .map((e) => BattingStats.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .toList()
         : null,
-      _pitchingStats = json['pitchingStats']?['serializedData'] != null
-        ? PitchingStats.fromJson(new Map<String, dynamic>.from(json['pitchingStats']['serializedData']))
+      _pitchingStats = json['pitchingStats'] is List
+        ? (json['pitchingStats'] as List)
+          .where((e) => e != null)
+          .map((e) => PitchingStats.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .toList()
+        : null,
+      _roster = json['roster']?['serializedData'] != null
+        ? Roster.fromJson(new Map<String, dynamic>.from(json['roster']['serializedData']))
         : null,
       _createdAt = json['createdAt'] != null ? amplify_core.TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? amplify_core.TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'weeklyTrades': _weeklyTrades, 'manager': _manager, 'leagueID': _leagueID, 'logo': _logo, 'record': _record?.toJson(), 'battingStats': _battingStats?.toJson(), 'pitchingStats': _pitchingStats?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'weeklyTrades': _weeklyTrades, 'manager': _manager, 'leagueID': _leagueID, 'logo': _logo, 'record': _record?.toJson(), 'battingStats': _battingStats?.map((BattingStats? e) => e?.toJson()).toList(), 'pitchingStats': _pitchingStats?.map((PitchingStats? e) => e?.toJson()).toList(), 'roster': _roster?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
@@ -245,6 +266,7 @@ class Team extends amplify_core.Model {
     'record': _record,
     'battingStats': _battingStats,
     'pitchingStats': _pitchingStats,
+    'roster': _roster,
     'createdAt': _createdAt,
     'updatedAt': _updatedAt
   };
@@ -259,6 +281,7 @@ class Team extends amplify_core.Model {
   static final RECORD = amplify_core.QueryField(fieldName: "record");
   static final BATTINGSTATS = amplify_core.QueryField(fieldName: "battingStats");
   static final PITCHINGSTATS = amplify_core.QueryField(fieldName: "pitchingStats");
+  static final ROSTER = amplify_core.QueryField(fieldName: "roster");
   static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Team";
     modelSchemaDefinition.pluralName = "Teams";
@@ -328,13 +351,21 @@ class Team extends amplify_core.Model {
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
       fieldName: 'battingStats',
       isRequired: false,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embedded, ofCustomTypeName: 'BattingStats')
+      isArray: true,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embeddedCollection, ofCustomTypeName: 'BattingStats')
     ));
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
       fieldName: 'pitchingStats',
       isRequired: false,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embedded, ofCustomTypeName: 'PitchingStats')
+      isArray: true,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embeddedCollection, ofCustomTypeName: 'PitchingStats')
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
+      fieldName: 'roster',
+      isRequired: false,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embedded, ofCustomTypeName: 'Roster')
     ));
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.nonQueryField(

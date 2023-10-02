@@ -1,25 +1,25 @@
 import 'dart:ffi';
-import 'package:fantasy_draft/features/leagues/components/roster.dart';
-import 'package:fantasy_draft/features/leagues/models/fantasy_team.dart';
-import 'package:fantasy_draft/features/leagues/models/temp_roster.dart';
+import 'package:fantasy_draft/features/leagues/components/roster_component.dart';
 import 'package:fantasy_draft/features/leagues/screens/create_team_page.dart';
-import 'package:fantasy_draft/features/player_management/models/player.dart';
 import 'package:fantasy_draft/global_components/section_container.dart';
 import 'package:fantasy_draft/managers/player_drag_manager.dart';
+import 'package:fantasy_draft/models/Player.dart';
 import 'package:fantasy_draft/models/Team.dart';
 import 'package:fantasy_draft/theme/theme.dart';
+import 'package:fantasy_draft/utils/amplify_utilities.dart';
 import 'package:fantasy_draft/utils/navigation_animation.dart';
+import 'package:fantasy_draft/utils/temp_data.dart';
 import 'package:flutter/material.dart';
 
 class FantasyTeamPage extends StatefulWidget {
   const FantasyTeamPage(
       {super.key,
-      required this.team,
+      required this.currentTeam,
       required this.teamID,
       required this.isInAsyncCall,
       required this.updateTeam});
 
-  final FantasyTeam team;
+  final Team currentTeam;
   final String teamID;
   final bool isInAsyncCall;
   final Function updateTeam;
@@ -29,7 +29,16 @@ class FantasyTeamPage extends StatefulWidget {
 }
 
 class _FantasyTeamPageState extends State<FantasyTeamPage> {
-  late Team myTeam;
+  _FantasyTeamPageState() {
+    dragManager = PlayerDragManager();
+  }
+
+  Map<int, List<String>> myRosterPlayers = {};
+
+  ThemeData theme = appDefaultTheme();
+
+  late PlayerDragManager dragManager;
+  late RosterComponent rosterComponent;
 
   @override
   void initState() {
@@ -37,45 +46,45 @@ class _FantasyTeamPageState extends State<FantasyTeamPage> {
 
     _refresh();
 
-    myRoster = Roster(
-      updateRoster: (Roster? r) => updateRoster(r!),
-      roster: widget.team.getRoster(),
-      removePlayerFromExtra: (Player? p) => removePlayerFromExtras(p!),
-      reassignDisplacedPlayer: (Player? p, String? o) => addPlayerToExtras(p!),
+    if (widget.teamID.isNotEmpty) {
+      AmplifyUtilities.getCurrentRosterPlayers().then(
+        (value) {
+          setState(() {
+            myRosterPlayers = value;
+          });
+        },
+      );
+    }
+
+    rosterComponent = RosterComponent(
+      updateRoster: (RosterComponent? r) => updateRoster(r!),
+      rosterPlayers: myRosterPlayers,
+      removePlayerFromExtra: (String? p) => removePlayerFromExtras(p!),
+      reassignDisplacedPlayer: (String? p, String? o) => addPlayerToExtras(p!),
       dragManager: dragManager,
       recentPlayerAccepted: (bool? b) => Void,
-      extraPlayers: TempRoster.getRoster()[8]!,
+      extraPlayers: TempData.tempRoster.bench!,
     );
   }
 
-  TempRoster temp = TempRoster();
-
-  late Roster myRoster;
-
-  late PlayerDragManager dragManager;
-
-  ThemeData theme = appDefaultTheme();
-
-  _FantasyTeamPageState() {
-    dragManager = PlayerDragManager();
-  }
-
-  void updateRoster(Roster r) {
-    TempRoster.updateRoster(myRoster.getRoster());
+  void updateRoster(RosterComponent r) {
+    //TODO: update db
+    //TempRoster.updateRoster(rosterComponent.getRosterPlayers());
     setState(() {
-      myRoster = r;
+      rosterComponent = r;
     });
   }
 
-//if player is already in target --> move that player to playerList
-  void removePlayerFromExtras(Player p) {
+  //if player has been placed in new slot, remove player from extras list
+  //if player is already in target --> move that player to playerList
+  void removePlayerFromExtras(String p) {
     print('REMOVE PLAYER');
-    TempRoster.removeFromExtras();
+    TempData.tempRoster.bench!.remove(p);
   }
 
-  void addPlayerToExtras(Player p) {
+  void addPlayerToExtras(String p) {
     print('ADD PLAYER');
-    TempRoster.addToExtras(p);
+    TempData.tempRoster.bench!.add(p);
   }
 
   @override
@@ -151,7 +160,7 @@ class _FantasyTeamPageState extends State<FantasyTeamPage> {
                 if (widget.teamID != '')
                   Padding(
                       padding: const EdgeInsets.only(top: 8.0),
-                      child: Center(child: sectionContainer(myRoster)))
+                      child: Center(child: sectionContainer(rosterComponent)))
                 else
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
@@ -178,4 +187,14 @@ class _FantasyTeamPageState extends State<FantasyTeamPage> {
       ),
     ));
   }
+
+  // Future<void> _setRosterPlayers() async {
+  //   AmplifyUtilities.getCurrentRosterPlayers().then(
+  //     (value) {
+  //       setState(() {
+  //         myRosterPlayers = value;
+  //       });
+  //     },
+  //   );
+  // }
 }
